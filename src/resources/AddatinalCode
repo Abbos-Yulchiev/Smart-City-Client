@@ -1,0 +1,49 @@
+{/*Recreation Place with Card*/}
+            {/*<div>
+                <div className={'d-flex justify-content-center'}>
+                    <Card style={{width: 1300, boxShadow: "inherit"}}
+                          className={'shadow-lg p-3 mb-5 bg-white rounded'}>
+                        <CardContent className={"d-flex justify-content-between"}>
+                            <Typography>
+                                <Typography className={"d-flex justify-content-between"} style={{fontSize: 24}}
+                                            gutterBottom>
+                                    Name: {res.name}
+                                </Typography>
+                                <Typography className={"d-flex justify-content-between"}
+                                            style={{marginBottom: 12, fontSize: 16}}>
+                                    Description: {res.description}
+                                </Typography>
+                                <Typography className={"d-flex justify-content-between"} style={{fontSize: 16}}
+                                            gutterBottom>
+                                    Category: {res.recreationCategory}
+                                </Typography>
+                                <Typography className={"d-flex justify-content-between"} style={{fontSize: 16}}
+                                            gutterBottom>
+                                    Status: {res.recreationStatus}
+                                </Typography>
+                                <Typography className={"d-flex justify-content-between"}
+                                            style={{marginBottom: 12, fontSize: 16}}>
+                                    ADDRESS: {res.address.building.street.district.name}, {" "}
+                                    {res.address.building.street.name}, {" "}
+                                    {res.address.building.buildingNumber} Building, {" "}
+                                    {res.address.homeNumber} Home
+                                </Typography>
+                                <Typography className={"d-flex justify-content-between"}>
+                                    Sits: {res.availableSits}
+                                </Typography>
+                                <Typography className={"d-flex justify-content-between"}>
+                                    Opening Time: {res.openingTime.substring(11, 16)} {" "} Closing
+                                    Time: {res.closingTime.substring(11, 16)}
+                                </Typography>
+
+                            </Typography>
+                            <Typography>
+                                <button className={'btn btn-success'} onClick={() => toggle2(res.id)}>
+                                    Watch Photos
+                                </button>
+                            </Typography>
+                        </CardContent>
+                        <br/>
+                    </Card>
+                </div>
+            </div>*/}
