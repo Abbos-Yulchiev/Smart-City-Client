@@ -11,7 +11,7 @@ export const urlPath = {
     deleteUser: 'user/delete/',
 
     /* Event urls */
-    getEvent: 'event/',
+    getEvent: 'event/get/',
     getAllEvent: 'event/all',
     getAllEventNotDelete: 'event/allNotDelete',
     addEvent: 'event/add',
@@ -34,22 +34,25 @@ export const urlPath = {
     editCommentary: 'commentary/edit/',
     deleteCommentary: 'commentary/delete/',
 
+    /*Order urls */
+    createNewOrder: 'order/newOrder',
+    cancelOrder: 'order/cancel/',
+    payForOrder: 'order/pay',
 
-    /** Order urls */
-    createNewOrder: 'order/new',
-
-    /**Ticket urls */
+    /*Ticket urls */
+    getAllTicketsByEventId: 'ticket/allByEventId/',
     createNewTickets: 'ticket/create',
     editTicket: 'ticket/edit',
-    getUnsoldTickets: 'tickets/getUnsoldTickets/',
+    getUnsoldTickets: 'ticket/getUnsoldTickets/',
+    addTicket: 'ticket/create',
 
-    /**Photo urls */
-    getPhoto: 'photo/',
+    /*Photo urls */
+    getPhoto: 'photo/get/',
     addPhoto: 'photo/add/',
     editPhoto: 'photo/edit/',
     deletePhoto: 'photo/delete/',
 
-    /**External APIs*/
+    /*External APIs*/
     getDistrict: "district",
     getStreet: "street?districtId=", //{distId}
     getCommercialBuilding: "commercialBuildings?streetId=", //{strId}

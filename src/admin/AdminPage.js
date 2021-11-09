@@ -53,7 +53,7 @@ function AdminPage() {
                                     <p className="card-text">
                                         User information. Adding new users and admins. Remove exist user and admins
                                     </p>
-                                    <a href="/Admin/UserList" className="btn bg-primary text-white border-light">
+                                    <a href="/admin/UserList" className="btn bg-primary text-white border-light">
                                         More Info
                                     </a>
                                 </div>

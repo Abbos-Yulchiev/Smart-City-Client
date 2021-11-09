@@ -210,6 +210,10 @@ function Event(history) {
         })
     }
 
+    function ticketUrl() {
+        history.push("/components/Tickets")
+    }
+
     return (
         <div>
             <br/>
@@ -274,7 +278,13 @@ function Event(history) {
                                             </Button>
                                     }
                                 </td>
-                                <td><Button color="success" style={{fontSize: 13}}>Buy ticket</Button></td>
+                                <td>
+                                    <Button href={'/components/Tickets'} onClick={ticketUrl}
+                                            color="warning"
+                                            style={{fontSize: 13}}>
+                                        Tickets
+                                    </Button>
+                                </td>
                                 <td style={{width: 300}}>
                                     {
                                         res.recreations.map((response) =>

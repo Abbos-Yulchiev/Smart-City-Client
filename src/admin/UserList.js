@@ -143,7 +143,7 @@ function UserList({history}) {
             <th>Card number</th>
             <th>Username</th>
             <th>Role</th>
-            <th>Edit</th>
+            <th>Deactivate</th>
             <th>Delete</th>
 
             </thead>
@@ -225,7 +225,7 @@ function UserList({history}) {
                 </ModalBody>
                 <ModalFooter>
                     <FormGroup>
-                        <Button color="primary">Add User</Button>{' '}
+                        <Button color="primary" onClick={toggle}>Add User</Button>{' '}
                     </FormGroup>
                     <Button color="danger" onClick={toggle} type={'button'}>Cancel</Button>
                 </ModalFooter>
@@ -245,6 +245,7 @@ function UserList({history}) {
                 <Button color="danger" type={'button'} onClick={() => deleteUser(deleteUserLink)}>Yes, delete</Button>
             </ModalFooter>
         </Modal>
+
         {/*Modal Deactivate User */}
         <Modal isOpen={modalDeactivate} toggle={modalDeactivate}>
             <ModalHeader>Deactivate User</ModalHeader>

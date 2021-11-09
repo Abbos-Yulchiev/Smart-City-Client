@@ -73,7 +73,7 @@ function Event(history) {
     }
 
     async function getRecreation(e) {
-        return await getRequest(urlPath.getAllRecreation + "?page=0&size=20");
+        return await getRequest(urlPath.getAllRecreationByExist + "?page=0&size=20");
     }
 
     async function watchPhoto(event, error, values) {
@@ -153,7 +153,7 @@ function Event(history) {
                                 <td>{res.availableSits}</td>
                                 <td>{res.startTime.substring(0, 10) + "  " + res.startTime.substring(11, 16)}</td>
                                 <td>{res.endTime.substring(0, 10) + "  " + res.endTime.substring(11, 16)}</td>
-                                <td><Button color="success">Buy ticket</Button></td>
+                                <td><Button href={'/user/Order'} color="warning">Buy ticket</Button></td>
                                 <td style={{width: 300}}>Name: {" "}{res.recreations[0].name}
                                     {" "}
                                     Address: {" "} {res.recreations[0].address.building.street.district.name}
