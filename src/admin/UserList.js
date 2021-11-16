@@ -16,9 +16,9 @@ function UserList({history}) {
 
     const [modal, setModal] = useState(false);
     const [modalDelete, setModalDelete] = useState(false);
-    const [modalDeactivate, setDeactivate] = useState(false);
+    const [modalActivate, setActivate] = useState(false);
     const [deleteUserLink, setDeleteUserLink] = useState('');
-    const [deactivateLink, setDeactivateLink] = useState('');
+    const [activateLink, setActivateLink] = useState('');
     const [users, setUsers] = useState([]);
     const [page, setPage] = useState(1);
     const [totalElements, setTotalElements] = useState(0);
@@ -31,7 +31,6 @@ function UserList({history}) {
 
     async function getUsers() {
         return await getRequest(urlPath.getUsers + "?page=" + (page - 1)).then(res => {
-            console.log(res.data)
             setUsers(res.data.object.content);
             setTotalElements(res.data.object.totalElements)
             setPage(page)
@@ -44,7 +43,6 @@ function UserList({history}) {
             getUsers().then(res => {
                 if (res.data && res.status === 200) {
                     value.setUser(res.data.object);
-                    console.log(res.data)
                 }
             }).catch((error) => {
                 if (error.status === 403) {
@@ -70,6 +68,7 @@ function UserList({history}) {
             "prePassword": values.password,
             "role": userRole
         }
+        console.log(user);
         postRequest(urlPath.addUser, user).then(res => {
             if (res.status === 201) {
                 toggle();
@@ -77,7 +76,7 @@ function UserList({history}) {
                 getUsers();
             }
         }).catch(error => {
-            toggle();
+            console.log(error);
             toast.error(error.response.data.errorMessage)
         })
     }
@@ -95,13 +94,13 @@ function UserList({history}) {
         setModalDelete(!modalDelete)
     }
 
-    function deactivateToggle(value) {
+    function activateToggle(value) {
         if (value !== null) {
-            setDeactivateLink(value);
+            setActivateLink(value);
         } else {
-            setDeactivateLink("")
+            setActivateLink("")
         }
-        setDeactivate(!modalDeactivate);
+        setActivate(!modalActivate);
     }
 
     function deleteUser(value) {
@@ -122,11 +121,11 @@ function UserList({history}) {
             if (res.status === 202) {
                 toast.success(res.data.message)
                 getUsers();
-                deactivateToggle(null);
+                activateToggle(null);
             }
         }).catch(error => {
             toast.error(error.response.data.errorMessage)
-            deactivateToggle(null);
+            activateToggle(null);
         })
     }
 
@@ -143,7 +142,7 @@ function UserList({history}) {
             <th>Card number</th>
             <th>Username</th>
             <th>Role</th>
-            <th>Deactivate</th>
+            <th>Activate</th>
             <th>Delete</th>
 
             </thead>
@@ -155,7 +154,7 @@ function UserList({history}) {
                         <td>{res.id}</td>
                         <td>{res.citizenId}</td>
                         <td>{res.username}</td>
-                        <td>{res.roles.map((res) => <a>{" -" + res.name + "- "}</a>)}
+                        <td>{res.roles.map((res) => <a>{" { " + res.name + " } "}</a>)}
                         </td>
                         <td>
                             {
@@ -167,14 +166,14 @@ function UserList({history}) {
                                 )
                                     ?
                                     < Button size="sm" color="warning"
-                                             onClick={() => deactivateToggle(urlPath.deactivateUser + res.id)}
+                                             onClick={() => activateToggle(urlPath.deactivateUser + res.id)}
                                     >
-                                        Deactivate User
+                                        Activate User
                                     </Button>
                                     : < Button size="sm" color="btn btn-light"
                                                disabled={true}
                                     >
-                                        Deactivate User
+                                        Activate User
                                     </Button>
 
                             }
@@ -225,7 +224,7 @@ function UserList({history}) {
                 </ModalBody>
                 <ModalFooter>
                     <FormGroup>
-                        <Button color="primary" onClick={toggle}>Add User</Button>{' '}
+                        <Button color="primary" >Add User</Button>{' '}
                     </FormGroup>
                     <Button color="danger" onClick={toggle} type={'button'}>Cancel</Button>
                 </ModalFooter>
@@ -246,18 +245,18 @@ function UserList({history}) {
             </ModalFooter>
         </Modal>
 
-        {/*Modal Deactivate User */}
-        <Modal isOpen={modalDeactivate} toggle={modalDeactivate}>
-            <ModalHeader>Deactivate User</ModalHeader>
+        {/*Modal Activate User */}
+        <Modal isOpen={modalActivate} toggle={modalActivate}>
+            <ModalHeader>Activate User</ModalHeader>
             <ModalBody>
-                Are you sure for deactivate User?
+                Are you sure for Activate User?
             </ModalBody>
             <ModalFooter>
                 <FormGroup>
-                    <Button color="success" onClick={deactivateToggle}>No</Button>{' '}
+                    <Button color="success" onClick={activateToggle}>No</Button>{' '}
                 </FormGroup>
-                <Button color="warning" type={'button'} onClick={() => deactivateUser(deactivateLink)}>Sure,
-                    deactivate</Button>
+                <Button color="warning" type={'button'} onClick={() => deactivateUser(activateLink)}>
+                    Sure! activate</Button>
             </ModalFooter>
         </Modal>
     </div>

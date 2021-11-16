@@ -5,12 +5,13 @@ import {urlPath} from "../apiPath/urlPath";
 import {GlobalContext} from "../App";
 import {Button, Table} from "reactstrap";
 import {toast} from "react-toastify";
+import {useParams} from "react-router";
 
 
-function Order() {
+function OrderTicket() {
 
     const value = useContext(GlobalContext);
-
+    const {event_id} = useParams();
     const [modal, setModal] = useState(false);
     const [unsoldTickets, setUnsoldTickets] = useState([]);
     const [price, setPrice] = useState('');
@@ -22,12 +23,10 @@ function Order() {
     const [paymentUrl, setPaymentUrl] = useState('');
 
     useEffect(() => {
-
         if (localStorage.getItem(TOKEN)) {
-            getEvent().then((response) => {
-                setEvent(response.data);
-            });
             getUnsoldTickets().then(res => {
+                console.log(res);
+                value.setLogged(true);
                 setUnsoldTickets(res.data.object);
                 if (res.data.object.length > 0)
                     setPrice(res.data.object[0].price);
@@ -39,11 +38,11 @@ function Order() {
     }, []);
 
     async function getEvent() {
-        return await getRequest(urlPath.getEvent + 1);
+        return await getRequest(urlPath.getEvent + event_id);
     }
 
     async function getUnsoldTickets() {
-        return await getRequest(urlPath.getUnsoldTickets + 1);
+        return await getRequest(urlPath.getUnsoldTickets + event_id);
     }
 
     function addCount() {
@@ -51,8 +50,7 @@ function Order() {
         if (a < unsoldTickets.length) {
             a++;
             setCount(a);
-        }
-        else {
+        } else {
             alert("All tickets are ordered. Sorry for inconvenience!")
         }
     }
@@ -73,8 +71,7 @@ function Order() {
                 tickets.push(res.id)
             })
             let ticketList = {"ticketsId": tickets}
-            postRequest(urlPath.createNewOrder, ticketList).then(res => {
-                console.log(res)
+            postRequest(urlPath.orderTicket, ticketList).then(res => {
                 if (res.status === 202) {
                     toast.success(res.data.message);
                     setOrder(true);
@@ -87,7 +84,6 @@ function Order() {
 
     function cancelOrder() {
         deleteRequest(urlPath.cancelOrder + orderId).then(res => {
-            console.log(value)
             if (res.status === 202) {
                 setOrder(false);
             }
@@ -128,15 +124,18 @@ function Order() {
                     <th>{event.eventType}</th>
                     <th> {
                         unsoldTickets.length === 0 ?
-                            <p style={{color:"red", fontSize:18}}>All tickets sold</p>
+                            <p style={{color: "red", fontSize: 18}}>All tickets sold</p>
                             : price + " $"
                     }
                     </th>
                     <th>
                         <div>
-                            <Button style={{width: 60}} onClick={reduction}>-</Button>
-                            <Button disabled>{count}</Button>
-                            <Button style={{width: 60}} onClick={addCount}>+</Button>
+                            <Button style={{width: 60, backgroundColor: "#02b45a", fontWeight: "bold"}}
+                                    onClick={reduction}>-</Button>
+                            <Button disabled
+                                    style={{width: 60, backgroundColor: "#0093b4", fontWeight: "bold"}}>{count}</Button>
+                            <Button style={{width: 60, backgroundColor: "#02b45a", fontWeight: "bold"}}
+                                    onClick={addCount}>+</Button>
                         </div>
                     </th>
                     <th>{price * count + " $"}</th>
@@ -167,7 +166,12 @@ function Order() {
                                             </Button>
                                     }
                                 </>
-                                : <Button style={{backgroundColor: "#ecb915", width: 70, margin: 5}}
+                                : <Button style={{
+                                    backgroundColor: "rgba(241,160,45,0.91)",
+                                    width: 90,
+                                    marginTop: 5,
+                                    fontWeight: "bold"
+                                }}
                                           onClick={makeOrder}
                                 >
                                     Order
@@ -180,7 +184,6 @@ function Order() {
             </div>
         </div>
     );
-
 }
 
-export default Order;
+export default OrderTicket;

@@ -27,6 +27,7 @@ export const urlPath = {
     addNewRecreation: 'recreation/add',
     editRecreation: 'recreation/edit/',
     deleteRecreation: 'recreation/delete/',
+    editRecreationStatus:'recreation/editStatus/',
 
     /* Commentary urls */
     getCommentary: 'commentary/all?recreationId=', //should add commentary Id
@@ -35,9 +36,13 @@ export const urlPath = {
     deleteCommentary: 'commentary/delete/',
 
     /*Order urls */
-    createNewOrder: 'order/newOrder',
+    myTickets: 'order/tickets',
+    myRecreations: 'order/recreation',
+    orderTicket: 'order/orderTicket',
+    orderRecreation: 'order/orderRecreation',
     cancelOrder: 'order/cancel/',
     payForOrder: 'order/pay',
+    ordersByRecreationId: 'order/ordersByRecreationId/',
 
     /*Ticket urls */
     getAllTicketsByEventId: 'ticket/allByEventId/',

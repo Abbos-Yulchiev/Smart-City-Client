@@ -3,6 +3,7 @@ import {GlobalContext} from "../App";
 import {TOKEN} from "../resources/Const";
 import {getRequest} from '../resources/Request'
 import {urlPath} from '../apiPath/urlPath';
+import {Button} from "reactstrap";
 
 function UserPage() {
 
@@ -42,7 +43,7 @@ function UserPage() {
             <div>
                 <div className="container d-flex justify-content-center">
                     <div className="row">
-                        <div className="col-6">
+                        <div className="col-4">
                             <div className="card text-white bg-success">
                                 <div className="card-body">
                                     <h3 className="card-title text-white">Recreation Places</h3>
@@ -53,7 +54,7 @@ function UserPage() {
                                 </div>
                             </div>
                         </div>
-                        <div className="col-6">
+                        <div className="col-4">
                             <div className="card text-white bg-success">
                                 <div className="card-body">
                                     <h3 className="card-title text-white">Events</h3>
@@ -61,6 +62,19 @@ function UserPage() {
                                         See events
                                     </p>
                                     <a href="/User/Event" className="btn bg-primary text-white border-light">
+                                        More Info
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-4">
+                            <div className="card text-white bg-success">
+                                <div className="card-body">
+                                    <h3 className="card-title text-white">Orders</h3>
+                                    <p className="card-text">
+                                        Your orders
+                                    </p>
+                                    <a href="/User/TicketsOrders" className="btn bg-primary text-white border-light">
                                         More Info
                                     </a>
                                 </div>

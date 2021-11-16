@@ -11,44 +11,49 @@ import {toast} from "react-toastify";
 function Tickets() {
 
     const value = useContext(GlobalContext);
-    const {res} = useParams();
+    const {event_id} = useParams();
 
     const [modal, setModal] = useState(false);
-    const [allTickets, setAllTickets] = useState([]);
-    const [unsoldTickets, setUnsoldTickets] = useState([]);
+    const [allTickets, setAllTickets] = useState(0);
+    const [unsoldTickets, setUnsoldTickets] = useState(0);
     const [price, setPrice] = useState(0);
     const [event, setEvent] = useState([]);
 
     useEffect(() => {
 
         if (localStorage.getItem(TOKEN)) {
-            getEvent().then((response) => {
-                setEvent(response.data);
+            getEvent().then(res => {
+                console.log(res);
+                setEvent(res.data);
             });
             getUnsoldTickets().then(res => {
-                setUnsoldTickets(res.data.body.length);
-                setPrice(res.data.body[0].price)
+                console.log(res);
+                setUnsoldTickets(res.data.object.length);
+                if (res.data.object.length > 0)
+                    setPrice(res.data.object[0].price);
             });
-            getAllTicket().then(resp => {
+            getAllTicket().then(res => {
+                console.log(res);
                 value.setLogged(true);
-                setAllTickets(resp.data);
+                setAllTickets(res.data);
             })
             getEvent().then(res => {
+                console.log(res);
                 setEvent(res.data.object);
             })
         }
     }, []);
 
     async function getEvent() {
-        return await getRequest(urlPath.getEvent + 1);
+        return await getRequest(urlPath.getEvent + event_id);
     }
 
     async function getAllTicket() {
-        return await getRequest(urlPath.getAllTicketsByEventId + 1);
+        return await getRequest(urlPath.getAllTicketsByEventId + event_id);
     }
 
     async function getUnsoldTickets() {
-        return await getRequest(urlPath.getUnsoldTickets + 1);
+        return await getRequest(urlPath.getUnsoldTickets + event_id);
     }
 
     function toggle() {
@@ -60,26 +65,21 @@ function Tickets() {
     }
 
     function addTicket(event, error, values) {
-        if (values.price !== '' &&
-            values.quantities !== '' &&
-            values.price > 0
-            && values.quantities > 0) {
-            let tickets = {
-                "price": values.price,
-                "quantities": values.quantities,
-                "eventId": 0,
 
-            }
-            console.log(tickets);
-            saveTicket(tickets).then(res => {
-                if (res.status === 201) {
-                    toggle();
-                    toast.success(res.data.message)
-                }
-            }).catch(error => {
-                toast.error(error.response.data.message)
-            })
+        let tickets = {
+            "price": values.price,
+            "quantities": values.quantities,
+            "eventId": event_id,
         }
+        console.log(tickets);
+        saveTicket(tickets).then(res => {
+            if (res.status === 201) {
+                toggle();
+                toast.success(res.data.message)
+            }
+        }).catch(error => {
+            toast.error(error.response.data.message)
+        })
     }
 
     return (
@@ -87,12 +87,11 @@ function Tickets() {
             <br/>
             <div className={'d-flex justify-content-between align-items-center'}>
                 <h3>Add Ticket</h3>
-                {/*{
-                    allTickets.length > 0
-                        ?*/}
-                <button className={'btn btn-success'} onClick={toggle}>Add Ticket</button>
-                {/*: <p/>
-                }*/}
+                {
+                    allTickets !== 0
+                        ?<Button disabled>Ticket added</Button>
+                        :<Button style={{backgroundColor:"#00a454"}} onClick={toggle}>Add Ticket</Button>
+                }
             </div>
             <br/>
             <Table striped bordered>
@@ -108,7 +107,12 @@ function Tickets() {
                 </thead>
                 <tbody style={{height: 40}}>
                 <th>ID</th>
-                <th>{event.name}</th>
+                <th>
+                    {
+                    event.name === null ? <p>Event deleted</p>:
+                        <p>{event.name}</p>
+                }
+                </th>
                 <th>{event.eventType}</th>
                 <td>{allTickets}</td>
                 <td>{unsoldTickets}</td>
@@ -124,7 +128,7 @@ function Tickets() {
                 <AvForm onSubmit={addTicket}>
                     <ModalBody>
                         <AvField name="price" label="Ticket price ($)" type="number"
-                                 placeholder = "Ticket price ..."
+                                 placeholder="Ticket price ..."
                                  validate={{
                                      pattern: {value: '[0-9]', errorMessage: 'You must enter positive numbers'},
                                      min: 0,
@@ -133,7 +137,7 @@ function Tickets() {
                                  }}
                                  min={"0"}/>
                         <AvField name="quantities" label="Ticket quantity" type="number"
-                                 placeholder = "Ticket quantities ..."
+                                 placeholder="Ticket quantities ..."
                                  validate={{
                                      pattern: {value: '[0-9]', errorMessage: 'You must enter positive numbers'},
                                      min: 0,
@@ -145,7 +149,7 @@ function Tickets() {
                     </ModalBody>
                     <ModalFooter>
                         <FormGroup>
-                            <Button color="primary">Add Event</Button>{' '}
+                            <Button color="primary">Add Ticket</Button>{' '}
                         </FormGroup>
                         <Button color="secondary" onClick={toggle}
                                 type={'button'}>Cancel</Button>

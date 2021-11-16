@@ -49,11 +49,6 @@ function Event(history) {
         {value: 'CANCELED', label: 'Canceled'}
     ]
 
-
-    async function getUser() {
-        return await getRequest(urlPath.authToken);
-    }
-
     useEffect(() => {
         if (localStorage.getItem(TOKEN)) {
             getUser().then(res => {
@@ -79,13 +74,42 @@ function Event(history) {
         }
     }, [])
 
+    async function getUser() {
+        return await getRequest(urlPath.authToken);
+    }
+
     async function getEventInfo(page) {
         return await getRequest(urlPath.getAllEvent + "?page=" + (page - 1) + "&size=10").then(res => {
-            console.log(res.data)
             setEventInfo(res.data.object.content);
             setTotalElements(res.data.object.totalElements);
             setPage(page);
         })
+    }
+
+    async function saveComment(commentary) {
+        return await postRequest(urlPath.addCommentary, commentary)
+
+    }
+
+    async function getRecreation() {
+        return await getRequest(urlPath.getAllRecreationByExist + "?page=0&size=20");
+    }
+
+    async function getRecreationId(event) {
+        setRecreationId([]);
+        if (event.target.value) {
+            setRecreationId(event.target.value);
+        }
+    }
+
+    async function getComments(id) {
+        return await getRequest(urlPath.getCommentary + id).then(res => {
+            setComment(res.data);
+        })
+    }
+
+    async function saveEvent(event) {
+        return await postRequest(urlPath.addEvent, event)
     }
 
     function addEvent(event, error, values) {
@@ -104,15 +128,10 @@ function Event(history) {
                 toggle();
                 toast.success(res.data.message)
                 getEventInfo(1);
-
             }
         }).catch(error => {
             toast.error(error.response.data.message)
         })
-    }
-
-    async function saveEvent(event) {
-        return await postRequest(urlPath.addEvent, event)
     }
 
     function formatDate(date) {
@@ -150,23 +169,6 @@ function Event(history) {
         setModal2(!modal2)
     }
 
-    async function getRecreation() {
-        return await getRequest(urlPath.getAllRecreationByExist + "?page=0&size=20");
-    }
-
-    async function getRecreationId(event) {
-        setRecreationId([]);
-        if (event.target.value) {
-            setRecreationId(event.target.value);
-        }
-    }
-
-    async function getComments(id) {
-        return await getRequest(urlPath.getCommentary + id).then(res => {
-            setComment(res.data);
-        })
-    }
-
     function addComment(id) {
         if (commentary.length !== 0) {
             let comment = {
@@ -182,22 +184,17 @@ function Event(history) {
         } else return alert("Comment text is empty!");
     }
 
-    async function saveComment(commentary) {
-        return await postRequest(urlPath.addCommentary, commentary)
-
-    }
-
     function deleteToggle(value) {
         if (value !== null) {
             setDeleteLink(value)
+            setModalDelete(!modalDelete)
         } else {
             setDeleteLink('')
+            setModalDelete(!modalDelete)
         }
-        setModalDelete(!modalDelete)
     }
 
     function deleteRecreation(value) {
-        console.log(value);
         deleteRequest(value).then(res => {
             if (res.status === 200) {
                 toast.success(res.data.message)
@@ -279,11 +276,15 @@ function Event(history) {
                                     }
                                 </td>
                                 <td>
-                                    <Button href={'/components/Tickets'} onClick={ticketUrl}
-                                            color="warning"
-                                            style={{fontSize: 13}}>
-                                        Tickets
-                                    </Button>
+                                    {
+                                        res.isDeleted !== null
+                                            ? <Button style={{fontSize: 13}} disabled>Tickets</Button>
+                                            : <Button href={`/components/Tickets/${res.id}`} onClick={ticketUrl}
+                                                      color="warning"
+                                                      style={{fontSize: 13}}>
+                                                Tickets
+                                            </Button>
+                                    }
                                 </td>
                                 <td style={{width: 300}}>
                                     {
@@ -403,21 +404,23 @@ function Event(history) {
                             <Button color="secondary" onClick={() => getComments(placeId)}>Comments</Button>
                             {
                                 comment.map((comRes, index) =>
-                                    <div style={{backgroundColor: "wheat"}}>
+                                    <div style={{marginTop: 10, backgroundColor: "wheat"}}>
                                         {
-                                            comRes.createdBy === null ?
-                                                <p style={{fontWeight: 'bold'}}
-                                                   className={"d-flex flex-row mx-2 my-1"}>By: Unknown</p>
-                                                : <p style={{fontWeight: 'bold'}}
-                                                     className={"d-flex flex-row mx-2 my-0"}>By : {comRes.createdBy}
-                                                    }
+                                            comRes[0] === null
+                                                ?
+                                                <p className={"d-flex flex-row mx-2 my-1"}>
+                                                    By: Unknown
+                                                </p>
+                                                : <p className={"d-flex flex-row mx-2 my-0"}>
+                                                    By : {comRes[1]} {comRes[2]}
                                                 </p>
                                         }
                                         <p className={"d-flex flex-row mx-2 my-0"}
-                                           style={{margin: "5"}}>Comment: {comRes.commentText}</p>
+                                           style={{margin: "5"}}>Comment: {comRes[0]}</p>
                                         <p className={"d-flex flex-row mx-2 my-0"}>
                                             Written
-                                            time: {comRes.createdAt.substring(0, 10)} {" "} {comRes.createdAt.substring(11, 16)}</p>
+                                            time: {comRes[3].substring(0, 10)} {" "} {comRes[3].substring(11, 16)}
+                                        </p>
                                     </div>
                                 )
                             }
@@ -435,9 +438,9 @@ function Event(history) {
                 </AvForm>
             </Modal>
 
-            {/*Modal Delete Recreation*/}
+            {/*Modal Delete Event*/}
             <Modal isOpen={modalDelete} toggle={deleteToggle}>
-                <ModalHeader>Delete Recreation Place</ModalHeader>
+                <ModalHeader>Delete Event</ModalHeader>
                 <ModalBody>
                     Are you sure for deleting?
                 </ModalBody>

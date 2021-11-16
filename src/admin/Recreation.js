@@ -63,9 +63,6 @@ function Recreation({history}) {
         {value: 'RESTORATION', label: 'Restoration'}
     ]
 
-    async function getUser() {
-        return await getRequest(urlPath.authToken);
-    }
 
     useEffect(() => {
         if (localStorage.getItem(TOKEN)) {
@@ -92,8 +89,13 @@ function Recreation({history}) {
         }
     }, [])
 
+    async function getUser() {
+        return await getRequest(urlPath.authToken);
+    }
+
     async function getPlaceInfo(page) {
         return await getRequest(urlPath.getAllRecreation + "?page=" + (page - 1) + "&size=10").then(res => {
+            console.log(res.data.object.content);
             setPlaceInfo(res.data.object.content);
             setTotalElements(res.data.object.totalElements);
             setPage(page);
@@ -101,6 +103,7 @@ function Recreation({history}) {
     }
 
     async function getComments(id) {
+        console.log(id);
         return await getRequest(urlPath.getCommentary + id).then(res => {
             setComment(res.data);
         })
@@ -108,6 +111,15 @@ function Recreation({history}) {
 
     async function getDistricts() {
         return await axios.get(MAIN_EXTERNAL_URL + urlPath.getDistrict);
+    }
+
+    async function saveComment(commentary) {
+        return await postRequest(urlPath.addCommentary, commentary)
+
+    }
+
+    async function saveRecreation(recreation) {
+        return await postRequest(urlPath.addNewRecreation, recreation);
     }
 
     async function getStreet(event) {
@@ -127,7 +139,6 @@ function Recreation({history}) {
         if (event.target.value) {
             await axios.get(MAIN_EXTERNAL_URL + urlPath.getCommercialBuilding + event.target.value).then(res => {
                 setBuildings(res.data.result);
-                console.log("Building data: " + res.data)
             });
         }
     }
@@ -136,15 +147,21 @@ function Recreation({history}) {
         setHouses([])
         if (event.target.value) {
             await axios.get(MAIN_EXTERNAL_URL + urlPath.getOffices + event.target.value).then(res => {
-                console.log(res.data.result);
                 setHouses(res.data.result);
             });
         }
     }
 
+    async function uploadPhoto(id, data) {
+        await postRequest(urlPath.addPhoto + id, data);
+    }
+
+    async function removePhoto() {
+        await deleteRequest(urlPath.deletePhoto + placeId);
+    }
+
     function getHomeId(event) {
         if (event.target.value) {
-            console.log(event.target.value);
             setHomeId(event.target.value)
         }
     }
@@ -193,15 +210,6 @@ function Recreation({history}) {
         setModalDelete(!modalDelete)
     }
 
-    async function uploadPhoto(id, data) {
-        await postRequest(urlPath.addPhoto + id, data);
-    }
-
-    async function removePhoto() {
-        await deleteRequest(urlPath.deletePhoto + placeId);
-    }
-
-
     function addRecreation(event, error, values) {
         let recreation = {
             "name": values.name,
@@ -211,6 +219,7 @@ function Recreation({history}) {
             "closingTime": formatDate(closingTime), // sample -> "2021-10-18 09:00:00"
             "recreationCategory": recreationCategory,
             "recreationStatus": recreationStatus,
+            "price": values.price,
             "address": houses,
         }
         saveRecreation(recreation).then(res => {
@@ -240,21 +249,7 @@ function Recreation({history}) {
         } else return alert("Comment text is empty!");
     }
 
-    async function saveComment(commentary) {
-        return await postRequest(urlPath.addCommentary, commentary)
-
-    }
-
-    async function watchPhoto(event, error, values) {
-
-    }
-
-    async function saveRecreation(recreation) {
-        return await postRequest(urlPath.addNewRecreation, recreation);
-    }
-
     function deleteRecreation(value) {
-        console.log(value);
         deleteRequest(value).then(res => {
             if (res.status === 200) {
                 toast.success(res.data.message)
@@ -293,7 +288,9 @@ function Recreation({history}) {
                 <th>Address</th>
                 <th>Opening Time</th>
                 <th>Closing Time</th>
+                <th>Price</th>
                 <th>Exist</th>
+                <th>Orders</th>
                 <th>Photos</th>
                 </thead>
                 <tbody>
@@ -322,17 +319,24 @@ function Recreation({history}) {
                                 </td>
                                 <td>{res.openingTime.substring(11, 16)}</td>
                                 <td>{res.closingTime.substring(11, 16)}</td>
-                                <th>{
-                                    res.exist.toLocaleString().toLocaleUpperCase() === "TRUE" ?
-                                        <Button color="danger" style={{fontSize: 14}}
-                                                onClick={() => deleteToggle(urlPath.deleteRecreation + res.id)}>Delete</Button>
-                                        : <Button disabled style={{fontSize: 14}}>Deleted</Button>
-                                }</th>
+                                <td>{res.price}$</td>
+                                <th>
+                                    {
+                                        res.exist.toLocaleString().toLocaleUpperCase() === "TRUE" ?
+                                            <Button color="danger" style={{fontSize: 14}}
+                                                    onClick={() => deleteToggle(urlPath.deleteRecreation + res.id)}>Delete</Button>
+                                            : <Button disabled style={{fontSize: 14}}>Deleted</Button>
+                                    }
+                                </th>
                                 <td>
-                                    <button style={{fontSize: 13}} className={'btn btn-success'}
+                                    <td><Button href={`/admin/Orders/${res.id}`} color="warning"
+                                                style={{fontSize: 14}}>Orders</Button></td>
+                                </td>
+                                <td>
+                                    <Button style={{fontSize: 13, backgroundColor: '#009349'}}
                                             onClick={() => toggle2(res.id)}>
                                         Watch Photos
-                                    </button>
+                                    </Button>
                                 </td>
                             </tr>
                         )}
@@ -408,6 +412,11 @@ function Recreation({history}) {
                             <AvInput name="availableSits" id="availableSits" required/>
                             <AvFeedback>Available sits must not be empty!</AvFeedback>
                         </AvGroup>
+                        <AvGroup>
+                            <Label for="price">Price for per sit</Label>
+                            <AvInput name="price" id="price" required/>
+                            <AvFeedback>Price must not be empty!</AvFeedback>
+                        </AvGroup>
                         <label>Opening Time</label>
                         <DatePicker selected={openingTime}
                                     showTimeSelect
@@ -454,7 +463,7 @@ function Recreation({history}) {
             {/*Modal For watching photo and comments*/}
             <Modal isOpen={modal2} toggle={toggle2} style={{content: "inherit"}} transparent={true}>
                 <ModalHeader toggle={toggle2}>Watch Photo and Commentary</ModalHeader>
-                <AvForm onSubmit={watchPhoto}>
+                <AvForm>
                     <ModalBody>
                         <AvGroup>
                             <Label for="photo" placeholder="chose photo">Photo</Label>
@@ -464,21 +473,23 @@ function Recreation({history}) {
                             <Button color="secondary" onClick={() => getComments(placeId)}>Comments</Button>
                             {
                                 comment.map((comRes, index) =>
-                                    <div style={{backgroundColor: "wheat"}}>
+                                    <div style={{marginTop: 10, backgroundColor: "wheat"}}>
                                         {
-                                            comRes.createdBy === null ?
-                                                <p style={{fontWeight: 'bold'}}
-                                                   className={"d-flex flex-row mx-2 my-1"}>By: Unknown</p>
-                                                : <p style={{fontWeight: 'bold'}}
-                                                     className={"d-flex flex-row mx-2 my-0"}>By : {comRes.createdBy}
-                                                    }
+                                            comRes[0] === null
+                                                ?
+                                                <p className={"d-flex flex-row mx-2 my-1"}>
+                                                    By: Unknown
+                                                </p>
+                                                : <p className={"d-flex flex-row mx-2 my-0"}>
+                                                    By : {comRes[1]} {comRes[2]}
                                                 </p>
                                         }
                                         <p className={"d-flex flex-row mx-2 my-0"}
-                                           style={{margin: "5"}}>Comment: {comRes.commentText}</p>
+                                           style={{margin: "5"}}>Comment: {comRes[0]}</p>
                                         <p className={"d-flex flex-row mx-2 my-0"}>
                                             Written
-                                            time: {comRes.createdAt.substring(0, 10)} {" "} {comRes.createdAt.substring(11, 16)}</p>
+                                            time: {comRes[3].substring(0, 10)} {" "} {comRes[3].substring(11, 16)}
+                                        </p>
                                     </div>
                                 )
                             }

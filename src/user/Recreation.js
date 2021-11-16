@@ -35,30 +35,6 @@ function UserRecreation({history}) {
         {value: 'SWIMMING_POOL', label: 'Swimming Pool'}
     ];
 
-    async function getUser() {
-        return await getRequest(urlPath.authToken);
-    }
-
-    async function getPlaceInfo(page) {
-        return await getRequest(urlPath.getAllRecreationByExist + "?page=" + (page - 1) + "&size=10").then(res => {
-            setPlaceInfo(res.data.object.content);
-            setTotalElements(res.data.object.totalElements);
-            setPage(page);
-        })
-    }
-
-    async function getComments(id) {
-        return await getRequest(urlPath.getCommentary + id).then(res => {
-            setComment(res.data);
-        })
-    }
-
-
-    function toggle(value) {
-        setPlaceId(value);
-        setModal(!modal)
-    }
-
     useEffect(() => {
         if (localStorage.getItem(TOKEN)) {
             getUser().then(res => {
@@ -81,6 +57,35 @@ function UserRecreation({history}) {
         }
     }, [])
 
+    async function getUser() {
+        return await getRequest(urlPath.authToken);
+    }
+
+    async function getPlaceInfo(page) {
+        return await getRequest(urlPath.getAllRecreationByExist + "?page=" + (page - 1) + "&size=10").then(res => {
+            setPlaceInfo(res.data.object.content);
+            setTotalElements(res.data.object.totalElements);
+            setPage(page);
+        })
+    }
+
+    async function getComments(id) {
+        return await getRequest(urlPath.getCommentary + id).then(res => {
+            setComment(res.data);
+        })
+    }
+
+    async function saveComment(commentary) {
+        return await postRequest(urlPath.addCommentary, commentary)
+    }
+
+
+
+    function toggle(value) {
+        setPlaceId(value);
+        setModal(!modal)
+
+    }
 
     function addComment(id) {
         if (commentary.length !== 0) {
@@ -90,18 +95,12 @@ function UserRecreation({history}) {
             }
             saveComment(comment).then(res => {
                 if (res.status === 201) {
-                    toggle();
                     toast.success(res.data.message)
                     setCommentary('');
                 }
             })
         } else return alert("Comment text is empty!");
     }
-
-    async function saveComment(commentary) {
-        return await postRequest(urlPath.addCommentary, commentary)
-    }
-
 
     return (
         <div>
@@ -128,6 +127,7 @@ function UserRecreation({history}) {
                 <th>Address</th>
                 <th>Opening Time</th>
                 <th>Closing Time</th>
+                <th>Make Order</th>
                 <th>Photos</th>
                 </thead>
                 <tbody>
@@ -156,10 +156,16 @@ function UserRecreation({history}) {
                                 <td>{res.openingTime.substring(11, 16)}</td>
                                 <td>{res.closingTime.substring(11, 16)}</td>
                                 <td>
-                                    <button style={{fontSize: 13}} className={'btn btn-success'}
+                                    <Button href={`/user/OrderRecreation/${res.id}`}
+                                            style={{fontSize: 14, backgroundColor: '#e18a09', color: '#fff'}}>
+                                        Make order
+                                    </Button>
+                                </td>
+                                <td>
+                                    <Button style={{fontSize: 14, backgroundColor: '#009349', color: '#fff'}}
                                             onClick={() => toggle(res.id)}>
                                         Watch Photos
-                                    </button>
+                                    </Button>
                                 </td>
                             </tr>
                         )}
@@ -182,27 +188,26 @@ function UserRecreation({history}) {
                             <img style={{width: 470}} src={BASE_URL + urlPath.getPhoto + placeId} alt={"Photo"}/>
                             <br/>
                             <br/>
-                            <Button color="secondary"
-                                    onClick={() => getComments(placeId)}>Comments</Button>
+                            <Button color="secondary" onClick={() => getComments(placeId)}>Comments</Button>
                             {
                                 comment.map((comRes, index) =>
-                                    <div style={{backgroundColor: "wheat"}}>
+                                    <div style={{marginTop: 10, backgroundColor: "wheat"}}>
                                         {
-                                            comRes.createdBy === null ?
-                                                <p style={{fontWeight: 'bold'}}
-                                                   className={"d-flex flex-row mx-2 my-1"}>By:
-                                                    Unknown</p>
-                                                : <p style={{fontWeight: 'bold'}}
-                                                     className={"d-flex flex-row mx-2 my-0"}>By
-                                                    : {comRes.createdBy}
-                                                    }
+                                            comRes[0] === null
+                                                ?
+                                                <p className={"d-flex flex-row mx-2 my-1"}>
+                                                    By: Unknown
+                                                </p>
+                                                : <p className={"d-flex flex-row mx-2 my-0"}>
+                                                    By : {comRes[1]} {comRes[2]}
                                                 </p>
                                         }
                                         <p className={"d-flex flex-row mx-2 my-0"}
-                                           style={{margin: "5"}}>Comment: {comRes.commentText}</p>
+                                           style={{margin: "5"}}>Comment: {comRes[0]}</p>
                                         <p className={"d-flex flex-row mx-2 my-0"}>
                                             Written
-                                            time: {comRes.createdAt.substring(0, 10)} {" "} {comRes.createdAt.substring(11, 16)}</p>
+                                            time: {comRes[3].substring(0, 10)} {" "} {comRes[3].substring(11, 16)}
+                                        </p>
                                     </div>
                                 )
                             }

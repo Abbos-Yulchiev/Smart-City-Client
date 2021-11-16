@@ -108,8 +108,8 @@ function Event(history) {
     return (
         <div>
             <br/>
-            <div className={'d-flex justify-content-around align-items-center'}>
-                <h3>Event Place</h3>
+            <div className={'d-flex justify-content-between align-items-center'}>
+                <h3>Events</h3>
                 <div>
                     <label>Search category</label>
                     <Select style={{fontSize: 16, width: 400, marginLeft: 10}} className="mb-2 col-md-12 col-offset-4"
@@ -153,7 +153,7 @@ function Event(history) {
                                 <td>{res.availableSits}</td>
                                 <td>{res.startTime.substring(0, 10) + "  " + res.startTime.substring(11, 16)}</td>
                                 <td>{res.endTime.substring(0, 10) + "  " + res.endTime.substring(11, 16)}</td>
-                                <td><Button href={'/user/Order'} color="warning">Buy ticket</Button></td>
+                                <td><Button href={`/user/OrderTicket/${res.id}`} color="warning">Buy ticket</Button></td>
                                 <td style={{width: 300}}>Name: {" "}{res.recreations[0].name}
                                     {" "}
                                     Address: {" "} {res.recreations[0].address.building.street.district.name}
@@ -191,21 +191,23 @@ function Event(history) {
                                     onClick={() => getComments(placeId)}>Comments</Button>
                             {
                                 comment.map((comRes, index) =>
-                                    <div style={{backgroundColor: "wheat"}}>
+                                    <div style={{marginTop: 10, backgroundColor: "wheat"}}>
                                         {
-                                            comRes.createdBy === null ?
-                                                <p style={{fontWeight: 'bold'}}
-                                                   className={"d-flex flex-row mx-2 my-1"}>By: Unknown</p>
-                                                : <p style={{fontWeight: 'bold'}}
-                                                     className={"d-flex flex-row mx-2 my-0"}>By : {comRes.createdBy}
-                                                    }
+                                            comRes[0] === null
+                                                ?
+                                                <p className={"d-flex flex-row mx-2 my-1"}>
+                                                    By: Unknown
+                                                </p>
+                                                : <p className={"d-flex flex-row mx-2 my-0"}>
+                                                    By : {comRes[1]} {comRes[2]}
                                                 </p>
                                         }
                                         <p className={"d-flex flex-row mx-2 my-0"}
-                                           style={{margin: "5"}}>Comment: {comRes.commentText}</p>
+                                           style={{margin: "5"}}>Comment: {comRes[0]}</p>
                                         <p className={"d-flex flex-row mx-2 my-0"}>
                                             Written
-                                            time: {comRes.createdAt.substring(0, 10)} {" "} {comRes.createdAt.substring(11, 16)}</p>
+                                            time: {comRes[3].substring(0, 10)} {" "} {comRes[3].substring(11, 16)}
+                                        </p>
                                     </div>
                                 )
                             }
