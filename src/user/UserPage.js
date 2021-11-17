@@ -4,6 +4,7 @@ import {TOKEN} from "../resources/Const";
 import {getRequest} from '../resources/Request'
 import {urlPath} from '../apiPath/urlPath';
 import {Button} from "reactstrap";
+import MyOrders from "./MyOrders";
 
 function UserPage() {
 
@@ -30,6 +31,7 @@ function UserPage() {
             value.setUser('');
         }
     }, []);
+
     return (
         <div style={{
             width: '100vw',
@@ -74,7 +76,7 @@ function UserPage() {
                                     <p className="card-text">
                                         Your orders
                                     </p>
-                                    <a href="/User/TicketsOrders" className="btn bg-primary text-white border-light">
+                                    <a href="/User/MyOrders" className="btn bg-primary text-white border-light">
                                         More Info
                                     </a>
                                 </div>

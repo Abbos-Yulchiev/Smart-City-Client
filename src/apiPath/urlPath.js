@@ -46,7 +46,6 @@ export const urlPath = {
 
     /*Ticket urls */
     getAllTicketsByEventId: 'ticket/allByEventId/',
-    createNewTickets: 'ticket/create',
     editTicket: 'ticket/edit',
     getUnsoldTickets: 'ticket/getUnsoldTickets/',
     addTicket: 'ticket/create',

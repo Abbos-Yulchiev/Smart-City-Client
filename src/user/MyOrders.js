@@ -7,7 +7,7 @@ import {Table} from "reactstrap";
 import {Button} from "antd";
 
 
-function TicketOrders() {
+function MyOrders() {
 
     const value = useContext(GlobalContext);
     const [orderedTicketList, setTicketList] = useState([]);
@@ -96,7 +96,11 @@ function TicketOrders() {
                                         }
                                         <td>{res[2].substring(0, 10) + " " + res[2].substring(11, 16)}</td>
                                         <td>{res[5] + "$"} </td>
-                                        <td>{res[3].toString()}</td>
+                                        <td>
+                                            {
+                                                res[3].toString() ==="true"?<p>Paid</p>:<p>Not paid</p>
+                                            }
+                                        </td>
                                     </tr>
                                 )
                             }
@@ -134,7 +138,11 @@ function TicketOrders() {
                                         <td>{res[8].substring(0, 10) + " " + res[8].substring(11, 16)}</td>
                                         <td>{res[9]}</td>
                                         <td>{res[6] + "$"}</td>
-                                        <td>{res[3].toString()}</td>
+                                        <td>
+                                            {
+                                            res[3].toString() ==="true"?<p>Paid</p>:<p>Not paid</p>
+                                        }
+                                        </td>
                                         <th>{res[4] + "$"}</th>
                                     </tr>
                                 )
@@ -147,4 +155,4 @@ function TicketOrders() {
     );
 }
 
-export default TicketOrders;
+export default MyOrders;

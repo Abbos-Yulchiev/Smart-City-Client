@@ -279,7 +279,7 @@ function Event(history) {
                                     {
                                         res.isDeleted !== null
                                             ? <Button style={{fontSize: 13}} disabled>Tickets</Button>
-                                            : <Button href={`/components/Tickets/${res.id}`} onClick={ticketUrl}
+                                            : <Button href={`/admin/Tickets/${res.id}`} onClick={ticketUrl}
                                                       color="warning"
                                                       style={{fontSize: 13}}>
                                                 Tickets

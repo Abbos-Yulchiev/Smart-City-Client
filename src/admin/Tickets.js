@@ -23,22 +23,18 @@ function Tickets() {
 
         if (localStorage.getItem(TOKEN)) {
             getEvent().then(res => {
-                console.log(res);
                 setEvent(res.data);
             });
             getUnsoldTickets().then(res => {
-                console.log(res);
                 setUnsoldTickets(res.data.object.length);
                 if (res.data.object.length > 0)
                     setPrice(res.data.object[0].price);
             });
             getAllTicket().then(res => {
-                console.log(res);
                 value.setLogged(true);
                 setAllTickets(res.data);
             })
             getEvent().then(res => {
-                console.log(res);
                 setEvent(res.data.object);
             })
         }

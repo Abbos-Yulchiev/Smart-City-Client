@@ -68,7 +68,6 @@ function UserList({history}) {
             "prePassword": values.password,
             "role": userRole
         }
-        console.log(user);
         postRequest(urlPath.addUser, user).then(res => {
             if (res.status === 201) {
                 toggle();
@@ -139,6 +138,8 @@ function UserList({history}) {
             <thead>
             <th>#</th>
             <th>ID</th>
+            <th>Firstname</th>
+            <th>Lastname</th>
             <th>Card number</th>
             <th>Username</th>
             <th>Role</th>
@@ -152,6 +153,8 @@ function UserList({history}) {
                     <tr>
                         <th scope={'row'}>{(page - 1) * 10 + index + 1}</th>
                         <td>{res.id}</td>
+                        <td>{res.firstName}</td>
+                        <td>{res.lastName}</td>
                         <td>{res.citizenId}</td>
                         <td>{res.username}</td>
                         <td>{res.roles.map((res) => <a>{" { " + res.name + " } "}</a>)}

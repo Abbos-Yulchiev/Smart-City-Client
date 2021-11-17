@@ -495,7 +495,8 @@ function Recreation({history}) {
                             }
                             <AvGroup>
                                 <br/>
-                                <input onChange={(e) => setCommentary(e.target.value)}
+                                <input type={"text"}
+                                    onChange={(e) => setCommentary(e.target.value)}
                                        name="comment"
                                        id="comment"
                                        placeholder={"Your comment(s)"}

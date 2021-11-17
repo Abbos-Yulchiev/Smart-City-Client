@@ -52,7 +52,11 @@ function Orders() {
                                 order.map(res =>
                                     <tr>
                                         <td>{res[0]}</td>
-                                        <td>{res[1].toString()}</td>
+                                        <td>
+                                            {
+                                                res[1].toString() === "true" ? <p>Paid</p> : <p>Not Paid</p>
+                                            }
+                                        </td>
                                         <th>{res[2]}$</th>
                                         <td>{res[3].substring(0, 10) + " " + res[3].substring(11, 16)}</td>
                                         <td>{res[4]}</td>
@@ -61,7 +65,7 @@ function Orders() {
                                         <td>{res[7].substring(0, 10) + " " + res[7].substring(11, 16)}</td>
                                         <td>{res[9]}</td>
                                         <td>{res[8]}$</td>
-                                        <td>{res[10] +" " + res[11]}</td>
+                                        <td>{res[10] + " " + res[11]}</td>
                                     </tr>
                                 )
                             }
@@ -73,7 +77,6 @@ function Orders() {
             }
         </div>
     );
-
 }
 
 export default Orders;

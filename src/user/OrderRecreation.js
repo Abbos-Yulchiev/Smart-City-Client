@@ -36,7 +36,6 @@ function OrderRecreation() {
     useEffect(() => {
         if (localStorage.getItem(TOKEN)) {
             getRecreation().then(res => {
-                console.log(res)
                 setRecreation(res.data.object);
                 setSits(res.data.object.availableSits);
                 setPrice(res.data.object.price);
@@ -114,7 +113,6 @@ function OrderRecreation() {
                 "visitingDuration": duration,
                 "visitingTime": formatDate(visitingTime),
             }
-            console.log(order);
             postRequest(urlPath.orderRecreation, order).then(res => {
                 if (res.status === 202) {
                     toast.success(res.data.message);
