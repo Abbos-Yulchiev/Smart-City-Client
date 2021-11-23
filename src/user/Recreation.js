@@ -63,8 +63,8 @@ function UserRecreation({history}) {
 
     async function getPlaceInfo(page) {
         return await getRequest(urlPath.getAllRecreationByExist + "?page=" + (page - 1) + "&size=10").then(res => {
-            setPlaceInfo(res.data.object.content);
-            setTotalElements(res.data.object.totalElements);
+            setPlaceInfo(res.data.content);
+            setTotalElements(res.data.totalElements);
             setPage(page);
         })
     }

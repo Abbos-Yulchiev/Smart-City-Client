@@ -57,7 +57,7 @@ function Event(history) {
                     value.setUser(res.data.result);
                     getEventInfo(1);
                     getRecreation().then(res => {
-                        setRecreation(res.data.object.content);
+                        setRecreation(res.data.content);
                     })
                 }
             }).catch((error) => {
@@ -80,8 +80,8 @@ function Event(history) {
 
     async function getEventInfo(page) {
         return await getRequest(urlPath.getAllEvent + "?page=" + (page - 1) + "&size=10").then(res => {
-            setEventInfo(res.data.object.content);
-            setTotalElements(res.data.object.totalElements);
+            setEventInfo(res.data.content);
+            setTotalElements(res.data.totalElements);
             setPage(page);
         })
     }

@@ -60,12 +60,11 @@ function Event(history) {
 
     async function getEventInfo(page) {
         return await getRequest(urlPath.getAllEventNotDelete + "?page=" + (page - 1) + "&size=10").then(res => {
-            setEventInfo(res.data.object.content);
-            setTotalElements(res.data.object.totalElements);
+            setEventInfo(res.data.content);
+            setTotalElements(res.data.totalElements);
             setPage(page);
         })
     }
-
 
     function toggle(value) {
         setPlaceId(value);

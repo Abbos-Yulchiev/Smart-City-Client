@@ -1,14 +1,17 @@
 import React, {useEffect, useState} from 'react';
 import {useParams} from "react-router";
-import {getRequest} from "../resources/Request";
+import {deleteRequest, getRequest} from "../resources/Request";
 import {TOKEN} from "../resources/Const";
 import {urlPath} from "../apiPath/urlPath";
-import {Table} from "reactstrap";
+import {Button, FormGroup, Modal, ModalBody, ModalFooter, ModalHeader, Table} from "reactstrap";
+import {toast} from "react-toastify";
 
 function Orders() {
 
     const {recreation_id} = useParams()
     const [order, setOrder] = useState([]);
+    const [modalCancel, setModalCancel] = useState(false);
+    const [cancelId, setCancelId] = useState('');
 
     useEffect(() => {
         console.log((recreation_id))
@@ -24,6 +27,28 @@ function Orders() {
 
     async function ordersByRecreationId() {
         return await getRequest(urlPath.ordersByRecreationId + recreation_id);
+    }
+
+    function cancelToggle(value) {
+        if (value !== null) {
+            setCancelId(value)
+        } else {
+            setCancelId('')
+        }
+        setModalCancel(!modalCancel)
+    }
+
+    function cancelOrder(value) {
+        deleteRequest(value).then(res => {
+            if (res.status === 200) {
+                toast.success(res.data.message)
+                setModalCancel(false);
+            }
+        }).catch(error => {
+            cancelToggle(null);
+            setModalCancel(false)
+            toast.error(error.response.data.errorMessage)
+        })
     }
 
     return (
@@ -54,7 +79,16 @@ function Orders() {
                                         <td>{res[0]}</td>
                                         <td>
                                             {
-                                                res[1].toString() === "true" ? <p>Paid</p> : <p>Not Paid</p>
+                                                res[1].toString() === "true"
+                                                    ? <p>Paid</p>
+                                                    : <div>
+                                                        <p>Not Paid</p>
+                                                        <Button style={{backgroundColor: "#ff3116"}}
+                                                                onClick={() => cancelToggle(urlPath.cancelOrder + res[0])}
+                                                        >
+                                                            Cancel order
+                                                        </Button>
+                                                    </div>
                                             }
                                         </td>
                                         <th>{res[2]}$</th>
@@ -75,6 +109,22 @@ function Orders() {
                     : <h4>No Orders yet ...</h4>
 
             }
+
+            {/*Modal Cancel order*/}
+            <Modal isOpen={modalCancel} toggle={cancelToggle}>
+                <ModalHeader>Cancel order!</ModalHeader>
+                <ModalBody>
+                    <p>Are you sure for Canceling order ?</p>
+                    <h5 style={{color: "red"}}>After canceling the order's information can't be recovered!</h5>
+                </ModalBody>
+                <ModalFooter>
+                    <FormGroup>
+                        <Button color="success" onClick={cancelToggle}>No</Button>{' '}
+                    </FormGroup>
+                    <Button color="danger" type={'button'} onClick={() => cancelOrder(cancelId)}>
+                        Yes, cancel</Button>
+                </ModalFooter>
+            </Modal>
         </div>
     );
 }

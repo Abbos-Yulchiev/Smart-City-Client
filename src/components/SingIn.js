@@ -33,16 +33,15 @@ function SingIn({history}) {
         history.set("/components/SingUp")
     }
 
-
     const handleClick = (e) => {
         e.preventDefault()
         const user = {username, password}
         axios.post(BASE_URL + urlPath.login, user)
             .then(response => {
                 if (response.status === 200 && response.data) {
-                    localStorage.setItem(TOKEN, TOKEN_TYPE + response.data.object);
+                    localStorage.setItem(TOKEN, TOKEN_TYPE + response.data.body.object);
                     let a = 0;
-                    response.data.roles.map((name, index) => {
+                    response.data.body.roles.map((name, index) => {
                         if (name.includes("ADMIN"))
                             a++;
                     });

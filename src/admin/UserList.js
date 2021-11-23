@@ -28,15 +28,6 @@ function UserList({history}) {
         {value: 'USER', label: 'USER'},
     ]
 
-
-    async function getUsers() {
-        return await getRequest(urlPath.getUsers + "?page=" + (page - 1)).then(res => {
-            setUsers(res.data.object.content);
-            setTotalElements(res.data.object.totalElements)
-            setPage(page)
-        })
-    }
-
     useEffect(() => {
         if (localStorage.getItem(TOKEN)) {
             value.setLogged(true);
@@ -59,6 +50,15 @@ function UserList({history}) {
             history.push("/");
         }
     }, []);
+
+    async function getUsers() {
+        return await getRequest(urlPath.getUsers + "?page=" + (page - 1)).then(res => {
+            setUsers(res.data.content);
+            setTotalElements(res.data.totalElements)
+            setPage(page)
+        })
+
+    }
 
     function addUser(event, error, values) {
         let user = {

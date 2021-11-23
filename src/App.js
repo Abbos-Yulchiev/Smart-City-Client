@@ -22,6 +22,7 @@ import OrderRecreation from "./user/OrderRecreation"
 export const GlobalContext = createContext();
 
 function App() {
+
     const [logged, setLogged] = useState(false)
 
     const [user, setUser] = useState('')

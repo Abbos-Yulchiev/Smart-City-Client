@@ -95,9 +95,9 @@ function Recreation({history}) {
 
     async function getPlaceInfo(page) {
         return await getRequest(urlPath.getAllRecreation + "?page=" + (page - 1) + "&size=10").then(res => {
-            console.log(res.data.object.content);
-            setPlaceInfo(res.data.object.content);
-            setTotalElements(res.data.object.totalElements);
+            console.log(res.data.content);
+            setPlaceInfo(res.data.content);
+            setTotalElements(res.data.totalElements);
             setPage(page);
         })
     }
