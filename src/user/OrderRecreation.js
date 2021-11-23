@@ -36,9 +36,10 @@ function OrderRecreation() {
     useEffect(() => {
         if (localStorage.getItem(TOKEN)) {
             getRecreation().then(res => {
-                setRecreation(res.data.object);
-                setSits(res.data.object.availableSits);
-                setPrice(res.data.object.price);
+                console.log(res);
+                setRecreation(res.data);
+                setSits(res.data.availableSits);
+                setPrice(res.data.price);
             })
         }
     }, []);
