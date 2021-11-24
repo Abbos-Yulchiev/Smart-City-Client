@@ -7,7 +7,8 @@ import {toast} from "react-toastify";
 import 'antd/dist/antd.css'
 import 'bootstrap/dist/css/bootstrap.css';
 import {AvForm, AvGroup} from "availity-reactstrap-validation";
-import {Button, Pagination, Select} from 'antd';
+import {Pagination, Select} from 'antd';
+import {Button} from "reactstrap";
 import "react-datepicker/dist/react-datepicker.css";
 import {Label, Modal, ModalBody, ModalHeader, Table} from "reactstrap";
 

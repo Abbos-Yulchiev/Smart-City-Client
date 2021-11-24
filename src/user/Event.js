@@ -41,7 +41,7 @@ function Event(history) {
                     value.setUser(res.data.result);
                     getEventInfo(1);
                     getRecreation().then(res => {
-                        setRecreation(res.data.object.content);
+                        setRecreation(res.data.content);
                     })
                 }
             }).catch((error) => {
