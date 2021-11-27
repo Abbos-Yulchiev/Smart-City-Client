@@ -3,16 +3,10 @@ import {GlobalContext} from "../App";
 import {TOKEN} from "../resources/Const";
 import {getRequest} from '../resources/Request'
 import {urlPath} from '../apiPath/urlPath';
-import {Button} from "reactstrap";
-import MyOrders from "./MyOrders";
 
-function UserPage() {
+function UserPage({history}) {
 
     const value = useContext(GlobalContext);
-
-    async function getUser() {
-        return await getRequest(urlPath.authToken);
-    }
 
     useEffect(() => {
         if (localStorage.getItem(TOKEN)) {
@@ -25,12 +19,17 @@ function UserPage() {
                 localStorage.removeItem(TOKEN);
                 value.setLogged(false);
                 value.setUser('');
+                history.push("/");
             })
         } else {
             value.setLogged(false);
             value.setUser('');
+            history.push("/");
         }
     }, []);
+    async function getUser() {
+        return await getRequest(urlPath.authToken);
+    }
 
     return (
         <div style={{

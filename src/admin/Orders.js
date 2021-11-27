@@ -1,13 +1,15 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {useParams} from "react-router";
 import {deleteRequest, getRequest} from "../resources/Request";
 import {TOKEN} from "../resources/Const";
 import {urlPath} from "../apiPath/urlPath";
 import {Button, FormGroup, Modal, ModalBody, ModalFooter, ModalHeader, Table} from "reactstrap";
 import {toast} from "react-toastify";
+import {GlobalContext} from "../App";
 
-function Orders() {
+function Orders({history}) {
 
+    const value = useContext(GlobalContext);
     const {recreation_id} = useParams()
     const [order, setOrder] = useState([]);
     const [modalCancel, setModalCancel] = useState(false);
@@ -21,7 +23,17 @@ function Orders() {
                 if (res.status === 200) {
                     setOrder(res.data.object)
                 }
+            }).catch((error) => {
+                localStorage.removeItem(TOKEN);
+                toast.error(error);
+                value.setLogged(false);
+                value.setUser('');
+                history.push("/");
             })
+        }else {
+            value.setLogged(false);
+            value.setUser('');
+            history.push("/");
         }
     }, []);
 
@@ -93,7 +105,13 @@ function Orders() {
                                         </td>
                                         <th>{res[2]}$</th>
                                         <td>{res[3].substring(0, 10) + " " + res[3].substring(11, 16)}</td>
-                                        <td>{res[4]}</td>
+                                        <td>
+                                            {
+                                                res[4] === null
+                                                    ? <p>no booking time</p>
+                                                    : res[4].substring(0, 10) + " " + res[4].substring(11, 16)
+                                            }
+                                        </td>
                                         <td>{res[5]}</td>
                                         <td>{res[6].substring(0, 10) + " " + res[6].substring(11, 16)}</td>
                                         <td>{res[7].substring(0, 10) + " " + res[7].substring(11, 16)}</td>
@@ -107,9 +125,7 @@ function Orders() {
                         </Table>
                     </div>
                     : <h4>No Orders yet ...</h4>
-
             }
-
             {/*Modal Cancel order*/}
             <Modal isOpen={modalCancel} toggle={cancelToggle}>
                 <ModalHeader>Cancel order!</ModalHeader>

@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {TOKEN} from "../resources/Const";
+import {REDIRECT_URL, TOKEN} from "../resources/Const";
 import {deleteRequest, getRequest, postRequest} from "../resources/Request";
 import {urlPath} from "../apiPath/urlPath";
 import {GlobalContext} from "../App";
@@ -8,7 +8,7 @@ import {toast} from "react-toastify";
 import {useParams} from "react-router";
 
 
-function OrderTicket() {
+function OrderTicket({history}) {
 
     const value = useContext(GlobalContext);
     const {event_id} = useParams();
@@ -30,10 +30,26 @@ function OrderTicket() {
                 setUnsoldTickets(res.data.object);
                 if (res.data.object.length > 0)
                     setPrice(res.data.object[0].price);
+            }).catch((error) => {
+                localStorage.removeItem(TOKEN);
+                toast.error(error);
+                value.setLogged(false);
+                value.setUser('');
+                history.push("/");
             });
             getEvent().then(res => {
                 setEvent(res.data.object);
+            }).catch((error) => {
+                localStorage.removeItem(TOKEN);
+                toast.error(error);
+                value.setLogged(false);
+                value.setUser('');
+                history.push("/");
             })
+        }else {
+            value.setLogged(false);
+            value.setUser('');
+            history.push("/");
         }
     }, []);
 
@@ -94,7 +110,7 @@ function OrderTicket() {
         let pay =
             {
                 "orderId": orderId,
-                "redirectUrl": "http://localhost:3000/user/Event"
+                "redirectUrl": REDIRECT_URL + "user/Event"
             };
         postRequest(urlPath.payForOrder, pay).then(res => {
             if (res.status === 200) {
@@ -102,6 +118,8 @@ function OrderTicket() {
             }
         })
     }
+
+    //TODO URL shoul be edited
 
 
     return (

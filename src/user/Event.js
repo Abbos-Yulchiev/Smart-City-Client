@@ -9,7 +9,7 @@ import {Pagination, Select} from "antd";
 import {Button, Label, Modal, ModalBody, ModalHeader, Table} from "reactstrap";
 import {AvForm, AvGroup} from "availity-reactstrap-validation";
 
-function Event(history) {
+function Event({history}) {
 
     const value = useContext(GlobalContext);
     const [totalElements, setTotalElements] = useState(0);
@@ -60,6 +60,7 @@ function Event(history) {
 
     async function getEventInfo(page) {
         return await getRequest(urlPath.getAllEventNotDelete + "?page=" + (page - 1) + "&size=10").then(res => {
+            console.log(res);
             setEventInfo(res.data.content);
             setTotalElements(res.data.totalElements);
             setPage(page);

@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {TOKEN} from "../resources/Const";
+import {REDIRECT_URL, TOKEN} from "../resources/Const";
 import {deleteRequest, getRequest, postRequest} from "../resources/Request";
 import {urlPath} from "../apiPath/urlPath";
 import {GlobalContext} from "../App";
@@ -9,7 +9,7 @@ import DatePicker from "react-datepicker";
 import {Select} from "antd";
 import {toast} from "react-toastify";
 
-function OrderRecreation() {
+function OrderRecreation({history}) {
     const value = useContext(GlobalContext);
 
     const {recreation_id} = useParams();
@@ -41,6 +41,10 @@ function OrderRecreation() {
                 setSits(res.data.availableSits);
                 setPrice(res.data.price);
             })
+        }else {
+            value.setLogged(false);
+            value.setUser('');
+            history.push("/");
         }
     }, []);
 
@@ -97,7 +101,7 @@ function OrderRecreation() {
         let pay =
             {
                 "orderId": orderId,
-                "redirectUrl": "http://localhost:3000/user/Recreation"
+                "redirectUrl": REDIRECT_URL + "user/Recreation"
             };
         postRequest(urlPath.payForOrder, pay).then(res => {
             if (res.status === 200) {

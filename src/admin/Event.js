@@ -9,7 +9,7 @@ import {Button, FormGroup, Label, Modal, ModalBody, ModalFooter, ModalHeader, Ta
 import {AvFeedback, AvField, AvForm, AvGroup, AvInput} from "availity-reactstrap-validation";
 import DatePicker from "react-datepicker";
 
-function Event(history) {
+function Event({history}) {
 
     const value = useContext(GlobalContext);
     const [totalElements, setTotalElements] = useState(0);

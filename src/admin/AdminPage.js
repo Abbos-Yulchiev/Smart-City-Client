@@ -5,7 +5,7 @@ import {urlPath} from "../apiPath/urlPath";
 import {TOKEN} from "../resources/Const";
 import {toast} from 'react-toastify';
 
-function AdminPage() {
+function AdminPage({history}) {
 
     const value = useContext(GlobalContext);
 
@@ -25,10 +25,12 @@ function AdminPage() {
                 localStorage.removeItem(TOKEN);
                 value.setLogged(false);
                 value.setUser('');
+                history.push("/");
             })
         } else {
             value.setLogged(false);
             value.setUser('');
+            history.push("/");
         }
     }, []);
     /*https://images.pexels.com/photos/1070945/pexels-photo-1070945.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940

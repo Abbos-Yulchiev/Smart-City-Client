@@ -8,7 +8,7 @@ import {useParams} from "react-router";
 import {AvField, AvForm} from "availity-reactstrap-validation";
 import {toast} from "react-toastify";
 
-function Tickets() {
+function Tickets({history}) {
 
     const value = useContext(GlobalContext);
     const {event_id} = useParams();
@@ -37,6 +37,10 @@ function Tickets() {
             getEvent().then(res => {
                 setEvent(res.data.object);
             })
+        }else {
+            value.setLogged(false);
+            value.setUser('');
+            history.push("/");
         }
     }, []);
 

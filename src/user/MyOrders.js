@@ -7,7 +7,7 @@ import {Button, FormGroup, Modal, ModalBody, ModalFooter, ModalHeader, Table} fr
 import {toast} from "react-toastify";
 
 
-function MyOrders() {
+function MyOrders({history}) {
 
     const value = useContext(GlobalContext);
     const [orderedTicketList, setTicketList] = useState([]);
@@ -25,13 +25,29 @@ function MyOrders() {
                     value.setLogged(true);
                     setTicketList(res.data.object);
                 }
+            }).catch((error) => {
+                localStorage.removeItem(TOKEN);
+                toast.error(error);
+                value.setLogged(false);
+                value.setUser('');
+                history.push("/");
             });
             getRecreation().then(res => {
                 console.log(res);
                 if (res.status === 200)
                     value.setLogged(true);
                 setRecreationList(res.data.object);
+            }).catch((error) => {
+                localStorage.removeItem(TOKEN);
+                toast.error(error);
+                value.setLogged(false);
+                value.setUser('');
+                history.push("/");
             })
+        }else {
+            value.setLogged(false);
+            value.setUser('');
+            history.push("/");
         }
     }, []);
 
