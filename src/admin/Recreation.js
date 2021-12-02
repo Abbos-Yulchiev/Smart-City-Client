@@ -75,13 +75,13 @@ function Recreation({history}) {
                         setDistricts(res.data.result);
                     });
                 }
-            }).catch((error) => {
+            })/*.catch((error) => {
                 localStorage.removeItem(TOKEN);
                 toast.error(error);
                 value.setLogged(false);
                 value.setUser('');
                 history.push("/");
-            })
+            })*/
         } else {
             value.setLogged(false);
             value.setUser('');
@@ -95,7 +95,6 @@ function Recreation({history}) {
 
     async function getPlaceInfo(page) {
         return await getRequest(urlPath.getAllRecreation + "?page=" + (page - 1) + "&size=10").then(res => {
-            console.log(res.data.content);
             setPlaceInfo(res.data.content);
             setTotalElements(res.data.totalElements);
             setPage(page);
@@ -103,7 +102,6 @@ function Recreation({history}) {
     }
 
     async function getComments(id) {
-        console.log(id);
         return await getRequest(urlPath.getCommentary + id).then(res => {
             setComment(res.data);
         })
@@ -223,7 +221,6 @@ function Recreation({history}) {
             "address": houses,
         }
         saveRecreation(recreation).then(res => {
-            console.log(recreation)
             if (res.status === 201) {
                 setModal(false);
                 toast.success(res.data.message)
@@ -481,14 +478,14 @@ function Recreation({history}) {
                                                     By: Unknown
                                                 </p>
                                                 : <p className={"d-flex flex-row mx-2 my-0"}>
-                                                    By : {comRes[1]} {comRes[2]}
+                                                    By : {comRes.writer}
                                                 </p>
                                         }
                                         <p className={"d-flex flex-row mx-2 my-0"}
-                                           style={{margin: "5"}}>Comment: {comRes[0]}</p>
+                                           style={{margin: "5"}}>Comment: {comRes.commentText}</p>
                                         <p className={"d-flex flex-row mx-2 my-0"}>
                                             Written
-                                            time: {comRes[3].substring(0, 10)} {" "} {comRes[3].substring(11, 16)}
+                                            time: {comRes.writtenTime.substring(0, 10)} {" "} {comRes.writtenTime.substring(11, 16)}
                                         </p>
                                     </div>
                                 )

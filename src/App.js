@@ -2,8 +2,8 @@ import React, {createContext, useState} from 'react';
 import './App.css';
 import {BrowserRouter, Route, Switch} from 'react-router-dom'
 import Appbar from './components/Appbar';
-import Login from './components/SingIn'
-import SingUp from './components/SingUp'
+import SignIn from './components/SignIn'
+import SingUp from './components/SignUp'
 import AdminPage from './admin/AdminPage'
 import Main from './components/Main'
 import UserList from "./admin/UserList";
@@ -32,9 +32,9 @@ function App() {
             <Appbar/>
             <BrowserRouter>
                 <Switch>
-                    <Route exact path={"/components/SingIn"} component={Login}/>
+                    <Route exact path={"/components/SignIn"} component={SignIn}/>
                     <Route exact path={"/admin/Tickets/:event_id"} component={Tickets}/>
-                    <Route exact path={"/components/SingUp"} component={SingUp}/>
+                    <Route exact path={"/components/SignUp"} component={SingUp}/>
                     <Route exact path={"/admin/Recreation"} component={Recreation}/>
                     <Route exact path={"/admin/UserList"} component={UserList}/>
                     <Route exact path={"/admin/Event"} component={Event}/>

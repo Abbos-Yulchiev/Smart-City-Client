@@ -25,27 +25,26 @@ function OrderTicket({history}) {
     useEffect(() => {
         if (localStorage.getItem(TOKEN)) {
             getUnsoldTickets().then(res => {
-                console.log(res);
                 value.setLogged(true);
                 setUnsoldTickets(res.data.object);
                 if (res.data.object.length > 0)
                     setPrice(res.data.object[0].price);
-            }).catch((error) => {
+            })/*.catch((error) => {
                 localStorage.removeItem(TOKEN);
                 toast.error(error);
                 value.setLogged(false);
                 value.setUser('');
                 history.push("/");
-            });
+            });*/
             getEvent().then(res => {
                 setEvent(res.data.object);
-            }).catch((error) => {
+            })/*.catch((error) => {
                 localStorage.removeItem(TOKEN);
                 toast.error(error);
                 value.setLogged(false);
                 value.setUser('');
                 history.push("/");
-            })
+            })*/
         }else {
             value.setLogged(false);
             value.setUser('');

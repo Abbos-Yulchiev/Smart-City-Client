@@ -35,7 +35,6 @@ export const putRequest = (url, data) => {
 }
 
 export const deleteRequest = (url) => {
-    console.log(url);
     return axios.delete(BASE_URL + url, {
         headers: {
             'Authorization': localStorage.getItem(TOKEN),

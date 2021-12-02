@@ -60,13 +60,13 @@ function Event({history}) {
                         setRecreation(res.data.content);
                     })
                 }
-            }).catch((error) => {
+            })/*.catch((error) => {
                 localStorage.removeItem(TOKEN);
                 toast.error(error);
                 value.setLogged(false);
                 value.setUser('');
                 history.push("/");
-            })
+            })*/
         } else {
             value.setLogged(false);
             value.setUser('');
@@ -208,7 +208,7 @@ function Event({history}) {
     }
 
     function ticketUrl() {
-        history.push("/components/Tickets")
+        history.push("/Admin/Event")
     }
 
     return (
@@ -412,14 +412,14 @@ function Event({history}) {
                                                     By: Unknown
                                                 </p>
                                                 : <p className={"d-flex flex-row mx-2 my-0"}>
-                                                    By : {comRes[1]} {comRes[2]}
+                                                    By : {comRes.writer}
                                                 </p>
                                         }
                                         <p className={"d-flex flex-row mx-2 my-0"}
-                                           style={{margin: "5"}}>Comment: {comRes[0]}</p>
+                                           style={{margin: "5"}}>Comment: {comRes.commentText}</p>
                                         <p className={"d-flex flex-row mx-2 my-0"}>
                                             Written
-                                            time: {comRes[3].substring(0, 10)} {" "} {comRes[3].substring(11, 16)}
+                                            time: {comRes.writtenTime.substring(0, 10)} {" "} {comRes.writtenTime.substring(11, 16)}
                                         </p>
                                     </div>
                                 )

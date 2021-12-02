@@ -21,12 +21,12 @@ function AdminPage({history}) {
                     value.setUser(res.data.result);
                     toast.success('Successfully logged!')
                 }
-            }).catch(() => {
+            })/*.catch(() => {
                 localStorage.removeItem(TOKEN);
                 value.setLogged(false);
                 value.setUser('');
                 history.push("/");
-            })
+            })*/
         } else {
             value.setLogged(false);
             value.setUser('');

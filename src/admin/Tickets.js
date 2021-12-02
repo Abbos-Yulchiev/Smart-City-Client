@@ -71,7 +71,6 @@ function Tickets({history}) {
             "quantities": values.quantities,
             "eventId": event_id,
         }
-        console.log(tickets);
         saveTicket(tickets).then(res => {
             if (res.status === 201) {
                 toggle();

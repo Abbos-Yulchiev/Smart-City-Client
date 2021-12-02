@@ -26,11 +26,10 @@ function SingIn({history}) {
     const {handleSubmit, formState} = useForm({mode: "all"});
     const {isSubmitting} = formState;
     const onSubmit = data => {
-        console.log(data);
     };
 
     function redirectToSignUp(){
-        history.set("/components/SingUp")
+        history.set("/components/SignUp")
     }
 
     const handleClick = (e) => {
@@ -62,7 +61,7 @@ function SingIn({history}) {
         <Container>
             <Paper elevation={3} style={paperStyle}>
                 <form className={classes.root} onSubmit={handleSubmit(onSubmit)} noValidate autoComplete="off">
-                    <h1 style={{color: "#3F51B5"}}>SING IN</h1>
+                    <h1 style={{color: "#3F51B5"}}>SIGN IN</h1>
                     <TextField
                         name="username"
                         type="text"
@@ -93,10 +92,10 @@ function SingIn({history}) {
                             onClick={handleClick}
                             disabled={isSubmitting}
                         >
-                            Login
+                            Commit
                         </Button>
                     </div>
-                    <a href="/components/SingUp" onClick={redirectToSignUp}>Create an account?
+                    <a href="/components/SignUp" onClick={redirectToSignUp}>Create an account?
                     </a>
                 </form>
             </Paper>

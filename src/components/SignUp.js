@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export function SingUp(history) {
+export function SignUp(history) {
     const classes = useStyles();
     const paperStyle = {padding: '40px', width: 400, margin: "30px auto"}
     const [citizenId, setCitizenId] = useState('')
@@ -34,7 +34,7 @@ export function SingUp(history) {
             axios.post(BASE_URL + urlPath.addUser, user)
                 .then((response) => {
                     localStorage.setItem('token', response.data.token)
-                    history.push('/components/SingIn');
+                    history.push('/components/SignIn');
                 });
             setRedirect(true);
         }
@@ -43,32 +43,32 @@ export function SingUp(history) {
         }
     }
     if (redirect) {
-        return <Redirect to="/SingIn"/>
+        return <Redirect to="/SignIn"/>
     }
 
     return (
         <Container>
             <Paper elevation={3} style={paperStyle}>
                 <form className={classes.root} noValidate autoComplete="off">
-                    <h1 style={{color: "#3F51B5"}}>Create Account</h1>
-                    <TextField id="outlined-basic" label="Citzen Id" variant="outlined" fullWidth
+                    <h1 style={{color: "#3F51B5"}}>Create account</h1>
+                    <TextField id="outlined-basic" label="Citizen Id" variant="outlined" fullWidth
                                value={citizenId} onChange={(e) => setCitizenId(e.target.value)}
                     />
-                    <TextField id="outlined-basic" label="Usrename" variant="outlined" fullWidth
+                    <TextField id="outlined-basic" label="Username" variant="outlined" fullWidth
                                value={username} onChange={(e) => setUsername(e.target.value)}
                     />
                     <TextField type="password" id="outlined-basic" label="Password" variant="outlined" fullWidth
                                value={password} onChange={(e) => setPassword(e.target.value)}
                     />
-                    <TextField type="password" id="outlined-basic" label="Pre Password" variant="outlined" fullWidth
+                    <TextField type="password" id="outlined-basic" label="Confirm password" variant="outlined" fullWidth
                                value={prePassword} onChange={(e) => setPrePassword(e.target.value)}
                     />
                     <div>
                         <Button variant="contained" color="primary" fullWidth onClick={handleClick}>
-                            Sing Up
+                            Commit
                         </Button>
                     </div>
-                    <a href="/components/SingIn">Sing In?
+                    <a href="/components/SignIn">Already have an account?
                     </a>
                 </form>
             </Paper>
@@ -76,4 +76,4 @@ export function SingUp(history) {
     );
 }
 
-export default SingUp;
+export default SignUp;

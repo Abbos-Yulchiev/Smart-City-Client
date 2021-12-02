@@ -15,12 +15,12 @@ function UserPage({history}) {
                     value.setLogged(true);
                     value.setUser(res.data.result);
                 }
-            }).catch(() => {
+            })/*.catch(() => {
                 localStorage.removeItem(TOKEN);
                 value.setLogged(false);
                 value.setUser('');
                 history.push("/");
-            })
+            })*/
         } else {
             value.setLogged(false);
             value.setUser('');
@@ -42,7 +42,7 @@ function UserPage({history}) {
         }}>
             <br/><br/>
             <div>
-                <div className="container d-flex justify-content-center">
+                <div className="container justify-content-center" style={{display:"flex", alignSelf:"normal" }}>
                     <div className="row">
                         <div className="col-4">
                             <div className="card text-white bg-success">
@@ -59,9 +59,10 @@ function UserPage({history}) {
                             <div className="card text-white bg-success">
                                 <div className="card-body">
                                     <h3 className="card-title text-white">Events</h3>
-                                    <p className="card-text">
+                                    <p className="card-text"  style={{marginBottom:8}}>
                                         See events
                                     </p>
+                                    <br/>
                                     <a href="/User/Event" className="btn bg-primary text-white border-light">
                                         More Info
                                     </a>
@@ -72,9 +73,10 @@ function UserPage({history}) {
                             <div className="card text-white bg-success">
                                 <div className="card-body">
                                     <h3 className="card-title text-white">Orders</h3>
-                                    <p className="card-text">
+                                    <p className="card-text"   style={{marginBottom:8}}>
                                         Your orders
                                     </p>
+                                    <br/>
                                     <a href="/User/MyOrders" className="btn bg-primary text-white border-light">
                                         More Info
                                     </a>

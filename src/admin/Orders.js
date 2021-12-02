@@ -16,20 +16,18 @@ function Orders({history}) {
     const [cancelId, setCancelId] = useState('');
 
     useEffect(() => {
-        console.log((recreation_id))
         if (localStorage.getItem(TOKEN)) {
             ordersByRecreationId().then(res => {
-                console.log(res)
                 if (res.status === 200) {
                     setOrder(res.data.object)
                 }
-            }).catch((error) => {
+            })/*.catch((error) => {
                 localStorage.removeItem(TOKEN);
                 toast.error(error);
                 value.setLogged(false);
                 value.setUser('');
                 history.push("/");
-            })
+            })*/
         }else {
             value.setLogged(false);
             value.setUser('');
@@ -88,10 +86,10 @@ function Orders({history}) {
                             {
                                 order.map(res =>
                                     <tr>
-                                        <td>{res[0]}</td>
+                                        <td>{res.id}</td>
                                         <td>
                                             {
-                                                res[1].toString() === "true"
+                                                res.paid.toString() === "true"
                                                     ? <p>Paid</p>
                                                     : <div>
                                                         <p>Not Paid</p>
@@ -103,21 +101,21 @@ function Orders({history}) {
                                                     </div>
                                             }
                                         </td>
-                                        <th>{res[2]}$</th>
-                                        <td>{res[3].substring(0, 10) + " " + res[3].substring(11, 16)}</td>
+                                        <th>{res.totalPrice}$</th>
+                                        <td>{res.creationDate.substring(0, 10) + " " + res.creationDate.substring(11, 16)}</td>
                                         <td>
                                             {
-                                                res[4] === null
+                                                res.bookingDate === null
                                                     ? <p>no booking time</p>
-                                                    : res[4].substring(0, 10) + " " + res[4].substring(11, 16)
+                                                    : res.bookingDate.substring(0, 10) + " " + res.bookingDate.substring(11, 16)
                                             }
                                         </td>
-                                        <td>{res[5]}</td>
-                                        <td>{res[6].substring(0, 10) + " " + res[6].substring(11, 16)}</td>
-                                        <td>{res[7].substring(0, 10) + " " + res[7].substring(11, 16)}</td>
-                                        <td>{res[9]}</td>
-                                        <td>{res[8]}$</td>
-                                        <td>{res[10] + " " + res[11]}</td>
+                                        <td>{res.visitorsNumber}</td>
+                                        <td>{res.visitingTime.substring(0, 10) + " " + res.visitingTime.substring(11, 16)}</td>
+                                        <td>{res.leavingTime.substring(0, 10) + " " + res.leavingTime.substring(11, 16)}</td>
+                                        <td>{res.name}</td>
+                                        <td>{res.price}$</td>
+                                        <td>{res.firstName + " " + res.lastName}</td>
                                     </tr>
                                 )
                             }

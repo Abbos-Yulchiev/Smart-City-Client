@@ -32,7 +32,8 @@ function UserList({history}) {
         if (localStorage.getItem(TOKEN)) {
             value.setLogged(true);
             getUsers().then(res => {
-                if (res.data && res.status === 200) {
+                console.log(res.data);
+                if (res.status === 200) {
                     value.setUser(res.data.object);
                 }
             }).catch((error) => {
@@ -75,7 +76,6 @@ function UserList({history}) {
                 getUsers();
             }
         }).catch(error => {
-            console.log(error);
             toast.error(error.response.data.errorMessage)
         })
     }

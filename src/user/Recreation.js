@@ -24,7 +24,6 @@ function UserRecreation({history}) {
     const [totalElements, setTotalElements] = useState(0);
     const [placeId, setPlaceId] = useState('');
     const [search, setSearch] = useState('');
-
     const searchCategory = [
         {value: '', label: 'All'},
         {value: 'PARK', label: 'Park'},
@@ -44,13 +43,13 @@ function UserRecreation({history}) {
                     value.setUser(res.data.result);
                     getPlaceInfo(1);
                 }
-            }).catch((error) => {
+            })/*.catch((error) => {
                 localStorage.removeItem(TOKEN);
                 toast.error(error);
                 value.setLogged(false);
                 value.setUser('');
                 history.push("/");
-            })
+            })*/
         } else {
             value.setLogged(false);
             value.setUser('');
@@ -64,7 +63,6 @@ function UserRecreation({history}) {
 
     async function getPlaceInfo(page) {
         return await getRequest(urlPath.getAllRecreationByExist + "?page=" + (page - 1) + "&size=10").then(res => {
-            console.log(res);
             setPlaceInfo(res.data.content);
             setTotalElements(res.data.totalElements);
             setPage(page);
@@ -201,14 +199,14 @@ function UserRecreation({history}) {
                                                     By: Unknown
                                                 </p>
                                                 : <p className={"d-flex flex-row mx-2 my-0"}>
-                                                    By : {comRes[1]} {comRes[2]}
+                                                    By : {comRes.writer}
                                                 </p>
                                         }
                                         <p className={"d-flex flex-row mx-2 my-0"}
-                                           style={{margin: "5"}}>Comment: {comRes[0]}</p>
+                                           style={{margin: "5"}}>Comment: {comRes.commentText}</p>
                                         <p className={"d-flex flex-row mx-2 my-0"}>
                                             Written
-                                            time: {comRes[3].substring(0, 10)} {" "} {comRes[3].substring(11, 16)}
+                                            time: {comRes.writtenTime.substring(0, 10)} {" "} {comRes.writtenTime.substring(11, 16)}
                                         </p>
                                     </div>
                                 )

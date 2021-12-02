@@ -36,7 +36,6 @@ function OrderRecreation({history}) {
     useEffect(() => {
         if (localStorage.getItem(TOKEN)) {
             getRecreation().then(res => {
-                console.log(res);
                 setRecreation(res.data);
                 setSits(res.data.availableSits);
                 setPrice(res.data.price);

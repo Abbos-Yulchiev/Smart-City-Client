@@ -20,30 +20,28 @@ function MyOrders({history}) {
     useEffect(() => {
         if (localStorage.getItem(TOKEN)) {
             getTickets().then(res => {
-                console.log(res);
                 if (res.status === 200) {
                     value.setLogged(true);
                     setTicketList(res.data.object);
                 }
-            }).catch((error) => {
+            })/*.catch((error) => {
                 localStorage.removeItem(TOKEN);
                 toast.error(error);
                 value.setLogged(false);
                 value.setUser('');
                 history.push("/");
-            });
+            });*/
             getRecreation().then(res => {
-                console.log(res);
                 if (res.status === 200)
                     value.setLogged(true);
                 setRecreationList(res.data.object);
-            }).catch((error) => {
+            })/*.catch((error) => {
                 localStorage.removeItem(TOKEN);
                 toast.error(error);
                 value.setLogged(false);
                 value.setUser('');
                 history.push("/");
-            })
+            })*/
         }else {
             value.setLogged(false);
             value.setUser('');
@@ -134,23 +132,23 @@ function MyOrders({history}) {
                             {
                                 orderedTicketList.map(res =>
                                     <tr>
-                                        <td>{res[0]}</td>
-                                        <td>{res[4]}</td>
+                                        <td>{res.id}</td>
+                                        <td>{res.name}</td>
                                         {
-                                            res[1] !== null
-                                                ? <td>{res[1].substring(0, 10) + " " + res[1].substring(11, 16)}</td>
+                                            res.bookingDate !== null
+                                                ? <td>{res.bookingDate.substring(0, 10) + " " + res.bookingDate.substring(11, 16)}</td>
                                                 : <td>not booking time</td>
                                         }
-                                        <td>{res[2].substring(0, 10) + " " + res[2].substring(11, 16)}</td>
-                                        <td>{res[5] + "$"} </td>
+                                        <td>{res.creationDate.substring(0, 10) + " " + res.creationDate.substring(11, 16)}</td>
+                                        <td>{res.price + "$"} </td>
                                         <td>
                                             {
-                                                res[3].toString() === "true"
+                                                res.paid.toString() === "true"
                                                     ? <p>Paid</p>
                                                     : <div>
                                                         <p>Not Paid</p>
                                                         <Button style={{backgroundColor: "#ff3116"}}
-                                                                onClick={() => cancelToggle(urlPath.cancelOrder + res[0])}
+                                                                onClick={() => cancelToggle(urlPath.cancelOrder + res.id)}
                                                         >
                                                             Cancel order
                                                         </Button>
@@ -182,33 +180,33 @@ function MyOrders({history}) {
                             {
                                 orderedRecreationList.map(res =>
                                     <tr>
-                                        <td>{res[0]}</td>
-                                        <td>{res[5]}</td>
+                                        <td>{res.id}</td>
+                                        <td>{res.name}</td>
                                         {
-                                            res[1] !== null
-                                                ? <td>{res[1].substring(0, 10) + " " + res[1].substring(11, 16)}</td>
+                                            res.bookingDate !== null
+                                                ? <td>{res.bookingDate.substring(0, 10) + " " + res.bookingDate.substring(11, 16)}</td>
                                                 : <td>not booking time</td>
                                         }
-                                        <td>{res[2].substring(0, 10) + " " + res[2].substring(11, 16)}</td>
-                                        <td>{res[7].substring(0, 10) + " " + res[7].substring(11, 16)}</td>
-                                        <td>{res[8].substring(0, 10) + " " + res[8].substring(11, 16)}</td>
-                                        <td>{res[9]}</td>
-                                        <td>{res[6] + "$"}</td>
+                                        <td>{res.creationDate.substring(0, 10) + " " + res.creationDate.substring(11, 16)}</td>
+                                        <td>{res.visitingTime.substring(0, 10) + " " + res.visitingTime.substring(11, 16)}</td>
+                                        <td>{res.leavingTime.substring(0, 10) + " " + res.leavingTime.substring(11, 16)}</td>
+                                        <td>{res.visitorsNumber}</td>
+                                        <td>{res.price + "$"}</td>
                                         <td>
                                             {
-                                                res[3].toString() === "true"
+                                                res.paid.toString() === "true"
                                                     ? <p>Paid</p>
                                                     : <div>
                                                         <p>Not Paid</p>
                                                         <Button style={{backgroundColor: "#ff3116"}}
-                                                                onClick={() => cancelToggle(urlPath.cancelOrder + res[0])}
+                                                                onClick={() => cancelToggle(urlPath.cancelOrder + res.id)}
                                                         >
                                                             Cancel order
                                                         </Button>
                                                     </div>
                                             }
                                         </td>
-                                        <th>{res[4] + "$"}</th>
+                                        <th>{res.totalPrice + "$"}</th>
                                     </tr>
                                 )
                             }
