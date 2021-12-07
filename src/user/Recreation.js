@@ -8,9 +8,8 @@ import 'antd/dist/antd.css'
 import 'bootstrap/dist/css/bootstrap.css';
 import {AvForm, AvGroup} from "availity-reactstrap-validation";
 import {Pagination, Select} from 'antd';
-import {Button} from "reactstrap";
+import {Button, Label, Modal, ModalBody, ModalHeader, Table} from "reactstrap";
 import "react-datepicker/dist/react-datepicker.css";
-import {Label, Modal, ModalBody, ModalHeader, Table} from "reactstrap";
 
 function UserRecreation({history}) {
 
@@ -28,7 +27,6 @@ function UserRecreation({history}) {
         {value: '', label: 'All'},
         {value: 'PARK', label: 'Park'},
         {value: 'THEATRE', label: 'Theatre'},
-        {value: 'SPORT', label: 'Sport'},
         {value: 'GARDEN', label: 'Garden'},
         {value: 'MUSEUM', label: 'Museum'},
         {value: 'BAY', label: 'Bay'},
@@ -141,33 +139,36 @@ function UserRecreation({history}) {
                         }
                     )
                         .map((res, index) =>
-                            <tr>
-                                <th scope={'row'}>{(page - 1) * 10 + index + 1}</th>
-                                <td>{res.name}</td>
-                                <td>{res.recreationCategory}</td>
-                                <td>{res.description}</td>
-                                <td>{res.recreationStatus}</td>
-                                <td>{res.availableSits}</td>
-                                <td>{res.address.building.street.district.name}, {" "}
-                                    {res.address.building.street.name}, {" "}
-                                    {res.address.building.buildingNumber} Building, {" "}
-                                    {res.address.homeNumber} Home
-                                </td>
-                                <td>{res.openingTime.substring(11, 16)}</td>
-                                <td>{res.closingTime.substring(11, 16)}</td>
-                                <td>
-                                    <Button href={`/user/OrderRecreation/${res.id}`}
-                                            style={{fontSize: 14, backgroundColor: '#e18a09', color: '#fff'}}>
-                                        Make order
-                                    </Button>
-                                </td>
-                                <td>
-                                    <Button style={{fontSize: 14, backgroundColor: '#009349', color: '#fff'}}
-                                            onClick={() => toggle(res.id)}>
-                                        Watch Photos
-                                    </Button>
-                                </td>
-                            </tr>
+                            (
+                                res.recreationStatus.toLowerCase() === "open" ?
+                                    <tr>
+                                        <th scope={'row'}>{(page - 1) * 10 + index + 1}</th>
+                                        <td>{res.name}</td>
+                                        <td>{res.recreationCategory}</td>
+                                        <td>{res.description}</td>
+                                        <td>{res.recreationStatus}</td>
+                                        <td>{res.availableSits}</td>
+                                        <td>{res.address.building.street.district.name}, {" "}
+                                            {res.address.building.street.name}, {" "}
+                                            {res.address.building.buildingNumber} Building, {" "}
+                                            {res.address.homeNumber} Home
+                                        </td>
+                                        <td>{res.openingTime[0] + "-" + res.openingTime[1] + "-" + res.openingTime[2] + " " + res.openingTime[3] + ":" + res.openingTime[4]}</td>
+                                        <td>{res.closingTime[0] + "-" + res.closingTime[1] + "-" + res.closingTime[2] + " " + res.closingTime[3] + ":" + res.closingTime[4]}</td>
+                                        <td>
+                                            <Button href={`/user/OrderRecreation/${res.id}`}
+                                                    style={{fontSize: 14, backgroundColor: '#e18a09', color: '#fff'}}>
+                                                Make order
+                                            </Button>
+                                        </td>
+                                        <td>
+                                            <Button style={{fontSize: 14, backgroundColor: '#009349', color: '#fff'}}
+                                                    onClick={() => toggle(res.id)}>
+                                                Watch Photos
+                                            </Button>
+                                        </td>
+                                    </tr>:<></>
+                            )
                         )}
                 </tbody>
             </Table>
@@ -206,7 +207,7 @@ function UserRecreation({history}) {
                                            style={{margin: "5"}}>Comment: {comRes.commentText}</p>
                                         <p className={"d-flex flex-row mx-2 my-0"}>
                                             Written
-                                            time: {comRes.writtenTime.substring(0, 10)} {" "} {comRes.writtenTime.substring(11, 16)}
+                                            time: {comRes.writtenTime[0] + "-" + comRes.writtenTime[1] + "-" + comRes.writtenTime[2] + " " + comRes.writtenTime[3] + ":" + comRes.writtenTime[4]}
                                         </p>
                                     </div>
                                 )

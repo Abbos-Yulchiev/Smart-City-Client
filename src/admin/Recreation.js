@@ -1,18 +1,28 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {deleteRequest, getRequest, postRequest} from "../resources/Request";
+import {deleteRequest, getRequest, postRequest, putRequest} from "../resources/Request";
 import {urlPath} from "../apiPath/urlPath";
 import {GlobalContext} from "../App";
 import {BASE_URL, MAIN_EXTERNAL_URL, TOKEN} from "../resources/Const";
-import {toast} from "react-toastify";
+import {toast, ToastContainer} from "react-toastify";
 import 'bootstrap/dist/css/bootstrap.css';
 import 'antd/dist/antd.css'
 import {Pagination, Select, Upload} from "antd";
-import {Button, FormGroup, Label, Modal, ModalBody, ModalFooter, ModalHeader, Table} from "reactstrap";
+import {Button, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader, Table} from "reactstrap";
 import {AvFeedback, AvField, AvForm, AvGroup, AvInput} from "availity-reactstrap-validation";
 import axios from "axios";
 import DatePicker from 'react-datepicker'
 import "react-datepicker/dist/react-datepicker.css";
 import {UploadOutlined} from "@ant-design/icons";
+import * as PropTypes from "prop-types";
+
+function TimePicker(props) {
+    return null;
+}
+
+TimePicker.propTypes = {
+    onChange: PropTypes.func,
+    value: PropTypes.any
+};
 
 function Recreation({history}) {
 
@@ -21,6 +31,7 @@ function Recreation({history}) {
     const [modal, setModal] = useState(false);
     const [modalDelete, setModalDelete] = useState(false);
     const [modal2, setModal2] = useState(false);
+    const [statusModal, setStatusModal] = useState(false);
     const [placeInfo, setPlaceInfo] = useState([]);
     const [comment, setComment] = useState([]);
     const [commentary, setCommentary] = useState('');
@@ -33,7 +44,7 @@ function Recreation({history}) {
     const [placeId, setPlaceId] = useState('');
     const [homeId, setHomeId] = useState('');
     const [openingTime, setOpeningTime] = useState(new Date());
-    const [closingTime, setClosingTime] = useState(new Date());
+    const [closingTime, setClosingTime] = useState('23:30');
     const [search, setSearch] = useState('');
     const [recreationCategory, setRecreationCategory] = useState('');
     const [recreationStatus, setRecreationStatus] = useState('');
@@ -41,7 +52,6 @@ function Recreation({history}) {
     const category = [
         {value: 'PARK', label: 'Park'},
         {value: 'THEATRE', label: 'Theatre'},
-        {value: 'SPORT', label: 'Sport'},
         {value: 'GARDEN', label: 'Garden'},
         {value: 'MUSEUM', label: 'Museum'},
         {value: 'BAY', label: 'Bay'},
@@ -51,7 +61,6 @@ function Recreation({history}) {
         {value: '', label: 'All'},
         {value: 'PARK', label: 'Park'},
         {value: 'THEATRE', label: 'Theatre'},
-        {value: 'SPORT', label: 'Sport'},
         {value: 'GARDEN', label: 'Garden'},
         {value: 'MUSEUM', label: 'Museum'},
         {value: 'BAY', label: 'Bay'},
@@ -63,6 +72,10 @@ function Recreation({history}) {
         {value: 'RESTORATION', label: 'Restoration'}
     ]
 
+    function onChange(e) {
+        console.log(e);
+        setClosingTime(e)
+    }
 
     useEffect(() => {
         if (localStorage.getItem(TOKEN)) {
@@ -75,13 +88,13 @@ function Recreation({history}) {
                         setDistricts(res.data.result);
                     });
                 }
-            })/*.catch((error) => {
+            }).catch((error) => {
                 localStorage.removeItem(TOKEN);
                 toast.error(error);
                 value.setLogged(false);
                 value.setUser('');
                 history.push("/");
-            })*/
+            })
         } else {
             value.setLogged(false);
             value.setUser('');
@@ -117,6 +130,7 @@ function Recreation({history}) {
     }
 
     async function saveRecreation(recreation) {
+        console.log(recreation);
         return await postRequest(urlPath.addNewRecreation, recreation);
     }
 
@@ -190,13 +204,48 @@ function Recreation({history}) {
         return [year + "-" + month + "-" + day + " " + hours + ":" + minutes + ":" + seconds];
     }
 
+    function timeFormatter(date) {
+        let d = new Date(date),
+            month = '' + (openingTime.getMonth() + 1),
+            day = '' + openingTime.getDate(),
+            year = (openingTime.getFullYear() + 1),
+            hours = closingTime.substring(0, 2),
+            minutes = closingTime.substring(3, 6),
+            seconds = closingTime.substring(7, 8);
+        if (month.length < 2) {
+            month = '0' + month;
+        }
+        if (day.length < 2) {
+            day = '0' + day;
+        }
+        if (hours < 10) {
+            hours = '0' + hours;
+        }
+        if (minutes < 10) {
+            minutes = '0' + minutes;
+        }
+        if (seconds < 10) {
+            seconds = '00';
+        }
+        return [year + "-" + month + "-" + day + " " + hours + ":" + minutes + ":00"];
+    }
+
     function toggle() {
         setModal(!modal)
+    }
+
+    function statusToggle() {
+        setStatusModal(!statusModal)
     }
 
     function toggle2(value) {
         setPlaceId(value);
         setModal2(!modal2)
+    }
+
+    function toggle3(value) {
+        setPlaceId(value);
+        setStatusModal(false);
     }
 
     function deleteToggle(value) {
@@ -209,26 +258,29 @@ function Recreation({history}) {
     }
 
     function addRecreation(event, error, values) {
-        let recreation = {
-            "name": values.name,
-            "description": values.description,
-            "availableSits": values.availableSits,
-            "openingTime": formatDate(openingTime), // sample -> "2021-10-18 09:00:00"
-            "closingTime": formatDate(closingTime), // sample -> "2021-10-18 09:00:00"
-            "recreationCategory": recreationCategory,
-            "recreationStatus": recreationStatus,
-            "price": values.price,
-            "address": houses,
-        }
-        saveRecreation(recreation).then(res => {
-            if (res.status === 201) {
-                setModal(false);
-                toast.success(res.data.message)
-                getPlaceInfo(1);
+        console.log(closingTime);
+        if (values.name !== "" && values.description !== "" && values.availableSits !== "") {
+            let recreation = {
+                "name": values.name,
+                "description": values.description,
+                "availableSits": values.availableSits,
+                "openingTime": formatDate(openingTime), // sample -> "2021-10-18 09:00:00"
+                "closingTime": timeFormatter(closingTime), // sample -> "2021-10-18 09:00:00"
+                "recreationCategory": recreationCategory,
+                "recreationStatus": recreationStatus,
+                "price": values.price,
+                "address": houses,
             }
-        }).catch(error => {
-            toast.error(error.response.data.message)
-        })
+            saveRecreation(recreation).then(res => {
+                if (res.status === 201) {
+                    setModal(false);
+                    toast.success(res.data.message)
+                    getPlaceInfo(1);
+                }
+            }).catch(error => {
+                toast.error("Error occurred!")
+            })
+        }
     }
 
     function addComment(id) {
@@ -259,8 +311,26 @@ function Recreation({history}) {
         })
     }
 
+    async function editEventStatus(status) {
+        return await putRequest(urlPath.editEventStatus + placeId, status)
+    }
+
+    function editStatus(event, error, values) {
+
+        editEventStatus(recreationStatus).then(res => {
+            if (res.status === 202) {
+                console.log(res);
+                toast.success(res.data.message)
+                statusToggle();
+            }
+        }).catch(error => {
+            toast.error("Error occurred!")
+        })
+    }
+
     return (
         <div>
+            <ToastContainer/>
             <br/>
             <div className={'d-flex justify-content-between align-items-center'}>
                 <h3>Recreation Places</h3>
@@ -286,7 +356,8 @@ function Recreation({history}) {
                 <th>Opening Time</th>
                 <th>Closing Time</th>
                 <th>Price</th>
-                <th>Exist</th>
+                <th>Edit Status</th>
+                <th>Delete</th>
                 <th>Orders</th>
                 <th>Photos</th>
                 </thead>
@@ -294,9 +365,9 @@ function Recreation({history}) {
                 {
                     placeInfo
                         .filter((value) => {
-                                if (search === '') {
-                                    return value;
-                                } else if (value.recreationCategory.toLowerCase().includes(search.toLowerCase())) {
+                            if (search === '') {
+                                return value;
+                            } else if (value.recreationCategory.toLowerCase().includes(search.toLowerCase())) {
                                     return value;
                                 }
                             }
@@ -314,9 +385,16 @@ function Recreation({history}) {
                                     {res.address.building.buildingNumber} Building, {" "}
                                     {res.address.homeNumber} Home
                                 </td>
-                                <td>{res.openingTime.substring(11, 16)}</td>
-                                <td>{res.closingTime.substring(11, 16)}</td>
+                                <td>{res.openingTime[3] + ":" + res.openingTime[4]}</td>
+                                <td>{res.closingTime[3] + ":" + res.closingTime[4]}</td>
                                 <td>{res.price}$</td>
+                                <td>
+                                    <Button onClick={() => {
+                                        toggle3(res.id);
+                                        statusToggle();
+                                    }} style={{backgroundColor: "#1c80b6", fontSize: 14, width: 100}}>Edit
+                                        status</Button>
+                                </td>
                                 <th>
                                     {
                                         res.exist.toLocaleString().toLocaleUpperCase() === "TRUE" ?
@@ -425,14 +503,12 @@ function Recreation({history}) {
                                     onChange={(date) => setOpeningTime(date)}
                         />
                         <label>Closing Time</label>
-                        <DatePicker selected={closingTime}
-                                    showTimeSelect
-                                    minDate={new Date()}
-                                    timeFormat="HH:mm:ss"
-                                    timeIntervals={15}
-                                    dateFormat="yyyy-MM-dd hh:mm:ss"
-                                    withPortal
-                                    onChange={(date) => setClosingTime(date)}
+                        <Input selected={closingTime}
+                               defaultValue="23:30"
+                               type="time"
+                               name="time"
+                               id="time"
+                               onChange={time => onChange(time.target.value)}
                         />
                         <br/>
                         <label>Recreation Category</label>
@@ -484,8 +560,9 @@ function Recreation({history}) {
                                         <p className={"d-flex flex-row mx-2 my-0"}
                                            style={{margin: "5"}}>Comment: {comRes.commentText}</p>
                                         <p className={"d-flex flex-row mx-2 my-0"}>
-                                            Written
-                                            time: {comRes.writtenTime.substring(0, 10)} {" "} {comRes.writtenTime.substring(11, 16)}
+                                            Written writtenTime
+                                            time: {comRes.writtenTime[0] + "-" + comRes.writtenTime[1] + "-" + comRes.writtenTime[2] + " " + comRes.writtenTime[3] + ":" + comRes.writtenTime[4]}
+
                                         </p>
                                     </div>
                                 )
@@ -531,11 +608,32 @@ function Recreation({history}) {
                 </ModalBody>
                 <ModalFooter>
                     <FormGroup>
-                        <Button color="success" onClick={deleteToggle}>No</Button>{' '}
+                        <Button color="danger" type={'button'} onClick={() => deleteRecreation(deleteLink)}>
+                            Yes, delete
+                        </Button>
                     </FormGroup>
-                    <Button color="danger" type={'button'} onClick={() => deleteRecreation(deleteLink)}>Yes,
-                        delete</Button>
+                    <Button onClick={deleteToggle}>Cancel</Button>{' '}
                 </ModalFooter>
+            </Modal>
+
+            {/*Edit status modal*/}
+            <Modal isOpen={statusModal} toggle={statusToggle}>
+                <ModalHeader toggle={statusToggle}>Edit status</ModalHeader>
+                <AvForm onSubmit={editStatus}>
+                    <ModalBody>
+                        <Select className="col-md-12"
+                                options={status} onChange={e => setRecreationStatus(e)}
+                                defaultValue={"Open"}
+                        />
+                    </ModalBody>
+                    <ModalFooter>
+                        <FormGroup>
+                            <Button color="primary">Edit</Button>{' '}
+                        </FormGroup>
+                        <Button color="secondary" onClick={statusToggle}
+                                type={'button'}>Cancel</Button>
+                    </ModalFooter>
+                </AvForm>
             </Modal>
         </div>
     );

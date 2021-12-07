@@ -3,11 +3,11 @@ import {GlobalContext} from "../App";
 import {TOKEN} from "../resources/Const";
 import {getRequest} from '../resources/Request'
 import {urlPath} from '../apiPath/urlPath';
+import {toast, ToastContainer} from "react-toastify";
 
 function UserPage({history}) {
 
     const value = useContext(GlobalContext);
-
     useEffect(() => {
         if (localStorage.getItem(TOKEN)) {
             getUser().then(res => {
@@ -22,6 +22,7 @@ function UserPage({history}) {
                 history.push("/");
             })*/
         } else {
+            toast.success("Username or password incorrect!");
             value.setLogged(false);
             value.setUser('');
             history.push("/");
@@ -59,7 +60,7 @@ function UserPage({history}) {
                             <div className="card text-white bg-success">
                                 <div className="card-body">
                                     <h3 className="card-title text-white">Events</h3>
-                                    <p className="card-text"  style={{marginBottom:8}}>
+                                    <p className="card-text" style={{marginBottom: 9}}>
                                         See events
                                     </p>
                                     <br/>
@@ -73,7 +74,7 @@ function UserPage({history}) {
                             <div className="card text-white bg-success">
                                 <div className="card-body">
                                     <h3 className="card-title text-white">Orders</h3>
-                                    <p className="card-text"   style={{marginBottom:8}}>
+                                    <p className="card-text" style={{marginBottom: 9}}>
                                         Your orders
                                     </p>
                                     <br/>

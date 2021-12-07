@@ -6,7 +6,7 @@ import {urlPath} from "../apiPath/urlPath";
 import {GlobalContext} from "../App";
 import {useParams} from "react-router";
 import {AvField, AvForm} from "availity-reactstrap-validation";
-import {toast} from "react-toastify";
+import {toast, ToastContainer} from "react-toastify";
 
 function Tickets({history}) {
 
@@ -74,15 +74,16 @@ function Tickets({history}) {
         saveTicket(tickets).then(res => {
             if (res.status === 201) {
                 toggle();
-                toast.success(res.data.message)
+                toast.success("Tickets savedS")
             }
         }).catch(error => {
-            toast.error(error.response.data.message)
+            toast.error("Error occurred!")
         })
     }
 
     return (
         <div>
+            <ToastContainer/>
             <br/>
             <div className={'d-flex justify-content-between align-items-center'}>
                 <h3>Add Ticket</h3>
@@ -121,7 +122,7 @@ function Tickets({history}) {
                 </tbody>
             </Table>
 
-            {/*Add Event Modal*/}
+            {/*Add Ticket Modal*/}
             <Modal isOpen={modal} toggle={toggle}>
                 <ModalHeader toggle={toggle}>Add Ticket</ModalHeader>
                 <AvForm onSubmit={addTicket}>

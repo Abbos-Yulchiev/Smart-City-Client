@@ -27,7 +27,8 @@ export const urlPath = {
     addNewRecreation: 'recreation/add',
     editRecreation: 'recreation/edit/',
     deleteRecreation: 'recreation/delete/',
-    editRecreationStatus:'recreation/editStatus/',
+    editRecreationStatus: 'recreation/editStatus/',
+    editEventStatus: 'recreation/editStatus/',
 
     /* Commentary urls */
     getCommentary: 'commentary/all?recreationId=', //should add commentary Id

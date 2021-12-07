@@ -8,7 +8,7 @@ import {AvFeedback, AvForm, AvGroup, AvInput} from "availity-reactstrap-validati
 import {Pagination, Select} from 'antd';
 import 'antd/dist/antd.css'
 import 'bootstrap/dist/css/bootstrap.css';
-import {toast} from "react-toastify";
+import {toast, ToastContainer} from "react-toastify";
 
 function UserList({history}) {
 
@@ -72,7 +72,7 @@ function UserList({history}) {
         postRequest(urlPath.addUser, user).then(res => {
             if (res.status === 201) {
                 toggle();
-                toast.success(res.data.message)
+                toast.success("User successfully added 👍")
                 getUsers();
             }
         }).catch(error => {
@@ -105,54 +105,54 @@ function UserList({history}) {
     function deleteUser(value) {
         deleteRequest(value).then(res => {
             if (res.status === 200) {
-                toast.success(res.data.message)
+                toast.success(res.data.message + " 👍")
                 getUsers();
                 deleteToggle(null);
             }
         }).catch(error => {
             deleteToggle(null);
-            toast.error(error.response.data.errorMessage)
+            toast.error("User not found or Already deleted")
         })
     }
 
-    function deactivateUser(values) {
+    function activateUser(values) {
         postRequest(values).then(res => {
             if (res.status === 202) {
-                toast.success(res.data.message)
+                toast.info(res.data.message + " 👍")
                 getUsers();
                 activateToggle(null);
             }
         }).catch(error => {
-            toast.error(error.response.data.errorMessage)
+            toast.error("User not found or Already deleted")
             activateToggle(null);
         })
     }
 
-    return <div className={'mt-3'}>
-        <div className={'d-flex justify-content-between align-items-center'}>
-            <h3>Users</h3>
-            <button className={'btn btn-success'} onClick={toggle}>Add User</button>
-        </div>
+    return (
+        <div className={'mt-3'}>
+            <ToastContainer/>
+            <div className={'d-flex justify-content-between align-items-center'}>
+                <h3>Users</h3>
+                <button className={'btn btn-success'} onClick={toggle}>Add User</button>
+            </div>
 
-        <Table striped>
-            <thead>
-            <th>#</th>
-            <th>ID</th>
-            <th>Firstname</th>
-            <th>Lastname</th>
-            <th>Card number</th>
-            <th>Username</th>
-            <th>Role</th>
-            <th>Activate</th>
-            <th>Delete</th>
+            <Table striped>
+                <thead>
+                <th>#</th>
+                <th>Firstname</th>
+                <th>Lastname</th>
+                <th>Card number</th>
+                <th>Username</th>
+                <th>Role</th>
+                <th>Activate</th>
+                <th>Delete</th>
 
-            </thead>
-            <tbody>
-            {
-                users.map((res, index) =>
+                </thead>
+                <tbody>
+                {
+                    users.map((res, index) =>
                     <tr>
                         <th scope={'row'}>{(page - 1) * 10 + index + 1}</th>
-                        <td>{res.id}</td>
                         <td>{res.firstName}</td>
                         <td>{res.lastName}</td>
                         <td>{res.citizenId}</td>
@@ -227,9 +227,9 @@ function UserList({history}) {
                 </ModalBody>
                 <ModalFooter>
                     <FormGroup>
-                        <Button color="primary" >Add User</Button>{' '}
+                        <Button color="primary">Submit</Button>{' '}
                     </FormGroup>
-                    <Button color="danger" onClick={toggle} type={'button'}>Cancel</Button>
+                    <Button onClick={toggle} type={'button'}>Cancel</Button>
                 </ModalFooter>
             </AvForm>
         </Modal>
@@ -242,7 +242,7 @@ function UserList({history}) {
             </ModalBody>
             <ModalFooter>
                 <FormGroup>
-                    <Button color="success" onClick={deleteToggle}>No</Button>{' '}
+                    <Button onClick={deleteToggle}>Cancel</Button>{' '}
                 </FormGroup>
                 <Button color="danger" type={'button'} onClick={() => deleteUser(deleteUserLink)}>Yes, delete</Button>
             </ModalFooter>
@@ -256,13 +256,15 @@ function UserList({history}) {
             </ModalBody>
             <ModalFooter>
                 <FormGroup>
-                    <Button color="success" onClick={activateToggle}>No</Button>{' '}
+                    <Button onClick={activateToggle}>Cancel</Button>{' '}
                 </FormGroup>
-                <Button color="warning" type={'button'} onClick={() => deactivateUser(activateLink)}>
+                <Button color="warning" type={'button'} onClick={() => activateUser(activateLink)}>
                     Sure! activate</Button>
             </ModalFooter>
         </Modal>
     </div>
+    )
 }
+
 
 export default UserList;

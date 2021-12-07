@@ -25,7 +25,6 @@ function Event({history}) {
         {value: '', label: 'All'},
         {value: 'CONCERT', label: 'Concert'},
         {value: 'FESTIVAL', label: 'Festival'},
-        {value: 'SPORT_COMPETITION', label: 'Sport Competition'},
         {value: 'PARTY', label: 'Party'}
     ];
 
@@ -150,9 +149,10 @@ function Event({history}) {
                                 <td>{res.description}</td>
                                 <td>{res.eventStatus}</td>
                                 <td>{res.availableSits}</td>
-                                <td>{res.startTime.substring(0, 10) + "  " + res.startTime.substring(11, 16)}</td>
-                                <td>{res.endTime.substring(0, 10) + "  " + res.endTime.substring(11, 16)}</td>
-                                <td><Button href={`/user/OrderTicket/${res.id}`} color="warning">Buy ticket</Button></td>
+                                <td>{res.startTime[0] + "-" + res.startTime[1] + "-" + res.startTime[2] + " " + res.startTime[3] + ":" + res.startTime[4]}</td>
+                                <td>{res.endTime[0] + "-" + res.endTime[1] + "-" + res.endTime[2] + " " + res.endTime[3] + ":" + res.endTime[4]}</td>
+                                <td><Button href={`/user/OrderTicket/${res.id}`} color="warning">Buy ticket</Button>
+                                </td>
                                 <td style={{width: 300}}>Name: {" "}{res.recreations[0].name}
                                     {" "}
                                     Address: {" "} {res.recreations[0].address.building.street.district.name}
@@ -205,7 +205,7 @@ function Event({history}) {
                                            style={{margin: "5"}}>Comment: {comRes.commentText}</p>
                                         <p className={"d-flex flex-row mx-2 my-0"}>
                                             Written
-                                            time: {comRes.writtenTime.substring(0, 10)} {" "} {comRes.writtenTime.substring(11, 16)}
+                                            time: {comRes.writtenTime[0] + "-" + comRes.writtenTime[1] + "-" + comRes.writtenTime[2] + " " + comRes.writtenTime[3] + ":" + comRes.writtenTime[4]}
                                         </p>
                                     </div>
                                 )

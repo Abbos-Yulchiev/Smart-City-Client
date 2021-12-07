@@ -4,7 +4,7 @@ import {deleteRequest, getRequest} from "../resources/Request";
 import {urlPath} from "../apiPath/urlPath";
 import {GlobalContext} from "../App";
 import {Button, FormGroup, Modal, ModalBody, ModalFooter, ModalHeader, Table} from "reactstrap";
-import {toast} from "react-toastify";
+import {toast, ToastContainer} from "react-toastify";
 
 
 function MyOrders({history}) {
@@ -20,6 +20,7 @@ function MyOrders({history}) {
     useEffect(() => {
         if (localStorage.getItem(TOKEN)) {
             getTickets().then(res => {
+                console.log(res);
                 if (res.status === 200) {
                     value.setLogged(true);
                     setTicketList(res.data.object);
@@ -32,6 +33,7 @@ function MyOrders({history}) {
                 history.push("/");
             });*/
             getRecreation().then(res => {
+                console.log(res);
                 if (res.status === 200)
                     value.setLogged(true);
                 setRecreationList(res.data.object);
@@ -79,18 +81,20 @@ function MyOrders({history}) {
     function cancelOrder(value) {
         deleteRequest(value).then(res => {
             if (res.status === 200) {
-                toast.success(res.data.message)
+                toast.success("Order successfully canceled!")
+                cancelToggle(null);
                 setModalCancel(false);
             }
         }).catch(error => {
+            toast.error("Error occurred!")
             cancelToggle(null);
             setModalCancel(false)
-            toast.error(error.response.data.errorMessage)
         })
     }
 
     return (
         <div>
+            <ToastContainer/>
             <br/>
             <div className={'d-flex justify-content-around align-items-center'}>
                 {
@@ -136,10 +140,11 @@ function MyOrders({history}) {
                                         <td>{res.name}</td>
                                         {
                                             res.bookingDate !== null
-                                                ? <td>{res.bookingDate.substring(0, 10) + " " + res.bookingDate.substring(11, 16)}</td>
+                                                ?
+                                                <td>{res.bookingDate[0] + "-" + res.bookingDate[1] + "-" + res.bookingDate[2] + " " + res.bookingDate[3] + ":" + res.bookingDate[4]}</td>
                                                 : <td>not booking time</td>
                                         }
-                                        <td>{res.creationDate.substring(0, 10) + " " + res.creationDate.substring(11, 16)}</td>
+                                        <td>{res.creationDate[0] + "-" + res.creationDate[1] + "-" + res.creationDate[2] + " " + res.creationDate[3] + ":" + res.creationDate[4]}</td>
                                         <td>{res.price + "$"} </td>
                                         <td>
                                             {
@@ -184,12 +189,13 @@ function MyOrders({history}) {
                                         <td>{res.name}</td>
                                         {
                                             res.bookingDate !== null
-                                                ? <td>{res.bookingDate.substring(0, 10) + " " + res.bookingDate.substring(11, 16)}</td>
+                                                ?
+                                                <td>{res.bookingDate[0] + "-" + res.bookingDate[1] + "-" + res.bookingDate[2] + " " + res.bookingDate[3] + ":" + res.bookingDate[4]}</td>
                                                 : <td>not booking time</td>
                                         }
-                                        <td>{res.creationDate.substring(0, 10) + " " + res.creationDate.substring(11, 16)}</td>
-                                        <td>{res.visitingTime.substring(0, 10) + " " + res.visitingTime.substring(11, 16)}</td>
-                                        <td>{res.leavingTime.substring(0, 10) + " " + res.leavingTime.substring(11, 16)}</td>
+                                        <td>{res.creationDate[0] + "-" + res.creationDate[1] + "-" + res.creationDate[2] + " " + res.creationDate[3] + ":" + res.creationDate[4]}</td>
+                                        <td>{res.visitingTime[0] + "-" + res.visitingTime[1] + "-" + res.visitingTime[2] + " " + res.visitingTime[3] + ":" + res.visitingTime[4]}</td>
+                                        <td>{res.leavingTime[0] + "-" + res.leavingTime[1] + "-" + res.leavingTime[2] + " " + res.leavingTime[3] + ":" + res.leavingTime[4]}</td>
                                         <td>{res.visitorsNumber}</td>
                                         <td>{res.price + "$"}</td>
                                         <td>

@@ -4,7 +4,7 @@ import {deleteRequest, getRequest} from "../resources/Request";
 import {TOKEN} from "../resources/Const";
 import {urlPath} from "../apiPath/urlPath";
 import {Button, FormGroup, Modal, ModalBody, ModalFooter, ModalHeader, Table} from "reactstrap";
-import {toast} from "react-toastify";
+import {toast, ToastContainer} from "react-toastify";
 import {GlobalContext} from "../App";
 
 function Orders({history}) {
@@ -57,12 +57,13 @@ function Orders({history}) {
         }).catch(error => {
             cancelToggle(null);
             setModalCancel(false)
-            toast.error(error.response.data.errorMessage)
+            toast.error("Error occurred")
         })
     }
 
     return (
         <div>
+            <ToastContainer/>
             <br/>
             <h1 className={'d-flex justify-content-start align-items-center'}>Recreation Orders</h1>
             {
@@ -102,17 +103,18 @@ function Orders({history}) {
                                             }
                                         </td>
                                         <th>{res.totalPrice}$</th>
-                                        <td>{res.creationDate.substring(0, 10) + " " + res.creationDate.substring(11, 16)}</td>
+                                        <td>{res.creationDate[0] + " " + res.creationDate[1]}</td>
                                         <td>
                                             {
                                                 res.bookingDate === null
                                                     ? <p>no booking time</p>
-                                                    : res.bookingDate.substring(0, 10) + " " + res.bookingDate.substring(11, 16)
+                                                    : res.bookingDate[0] + "-" + res.bookingDate[1] + "-" + res.bookingDate[2] + " " + res.bookingDate[3] + ":" + res.bookingDate[4]
                                             }
                                         </td>
                                         <td>{res.visitorsNumber}</td>
-                                        <td>{res.visitingTime.substring(0, 10) + " " + res.visitingTime.substring(11, 16)}</td>
-                                        <td>{res.leavingTime.substring(0, 10) + " " + res.leavingTime.substring(11, 16)}</td>
+
+                                        <td>{res.visitingTime[0] + "-" + res.visitingTime[1] + "-" + res.visitingTime[2] + " " + res.visitingTime[3] + ":" + res.visitingTime[4]}</td>
+                                        <td>{res.leavingTime[0] + "-" + res.leavingTime[1] + "-" + res.leavingTime[2] + " " + res.leavingTime[3] + ":" + res.leavingTime[4]}</td>
                                         <td>{res.name}</td>
                                         <td>{res.price}$</td>
                                         <td>{res.firstName + " " + res.lastName}</td>
@@ -128,15 +130,15 @@ function Orders({history}) {
             <Modal isOpen={modalCancel} toggle={cancelToggle}>
                 <ModalHeader>Cancel order!</ModalHeader>
                 <ModalBody>
-                    <p>Are you sure for Canceling order ?</p>
-                    <h5 style={{color: "red"}}>After canceling the order's information can't be recovered!</h5>
+                    <p style={{color: "red"}}>Are you sure for Canceling order ?</p>
+                    <h5 style={{color: "red"}}>After canceling the order, the information of order can't be recovered!</h5>
                 </ModalBody>
                 <ModalFooter>
                     <FormGroup>
-                        <Button color="success" onClick={cancelToggle}>No</Button>{' '}
+                        <Button color="primary" onClick={cancelToggle}>No</Button>{' '}
                     </FormGroup>
                     <Button color="danger" type={'button'} onClick={() => cancelOrder(cancelId)}>
-                        Yes, cancel</Button>
+                        Yes, cancel !</Button>
                 </ModalFooter>
             </Modal>
         </div>

@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {BASE_URL, TOKEN} from "../resources/Const";
-import {toast} from "react-toastify";
+import {toast, ToastContainer} from "react-toastify";
 import {deleteRequest, getRequest, postRequest} from "../resources/Request";
 import {urlPath} from "../apiPath/urlPath";
 import {GlobalContext} from "../App";
@@ -33,13 +33,11 @@ function Event({history}) {
         {value: '', label: 'All'},
         {value: 'CONCERT', label: 'Concert'},
         {value: 'FESTIVAL', label: 'Festival'},
-        {value: 'SPORT_COMPETITION', label: 'Sport Competition'},
         {value: 'PARTY', label: 'Party'}
     ];
     const type = [
         {value: 'CONCERT', label: 'Concert'},
         {value: 'FESTIVAL', label: 'Festival'},
-        {value: 'SPORT_COMPETITION', label: 'Sport Competition'},
         {value: 'PARTY', label: 'Party'}
     ];
     const statuses = [
@@ -130,7 +128,7 @@ function Event({history}) {
                 getEventInfo(1);
             }
         }).catch(error => {
-            toast.error(error.response.data.message)
+            toast.error("Error occurred!")
         })
     }
 
@@ -203,7 +201,7 @@ function Event({history}) {
             }
         }).catch(error => {
             deleteToggle(null);
-            toast.error(error.response.data.errorMessage)
+            toast.error("Error occurred or Event already deleted!")
         })
     }
 
@@ -213,6 +211,7 @@ function Event({history}) {
 
     return (
         <div>
+            <ToastContainer/>
             <br/>
             <div className={'d-flex justify-content-between align-items-center'}>
                 <h3>Event Place</h3>
@@ -261,8 +260,8 @@ function Event({history}) {
                                 <td>{res.description}</td>
                                 <td>{res.eventStatus}</td>
                                 <td>{res.availableSits}</td>
-                                <td>{res.startTime.substring(0, 10) + "  " + res.startTime.substring(11, 16)}</td>
-                                <td>{res.endTime.substring(0, 10) + "  " + res.endTime.substring(11, 16)}</td>
+                                <td>{res.startTime[0] + "-" + res.startTime[1] + "-" + res.startTime[2] + " " + res.startTime[3] + ":" + res.startTime[4]}</td>
+                                <td>{res.endTime[0] + "-" + res.endTime[1] + "-" + res.endTime[2] + " " + res.endTime[3] + ":" + res.endTime[4]}</td>
                                 <th>{res.confirmed + ""}</th>
                                 <td>
                                     {
@@ -419,7 +418,7 @@ function Event({history}) {
                                            style={{margin: "5"}}>Comment: {comRes.commentText}</p>
                                         <p className={"d-flex flex-row mx-2 my-0"}>
                                             Written
-                                            time: {comRes.writtenTime.substring(0, 10)} {" "} {comRes.writtenTime.substring(11, 16)}
+                                            time: {comRes.writtenTime[0] + "-" + comRes.writtenTime[1] + "-" + comRes.writtenTime[2] + " " + comRes.writtenTime[3] + ":" + comRes.writtenTime[4]}
                                         </p>
                                     </div>
                                 )

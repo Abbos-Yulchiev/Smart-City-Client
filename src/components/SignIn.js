@@ -6,8 +6,7 @@ import {useForm} from "react-hook-form";
 import {BASE_URL, TOKEN, TOKEN_TYPE} from '../resources/Const';
 import {urlPath} from "../apiPath/urlPath"
 import axios from 'axios';
-import {toast} from "react-toastify"
-
+import {toast, ToastContainer} from "react-toastify"
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -45,20 +44,21 @@ function SingIn({history}) {
                             a++;
                     });
                     if (a > 0) {
-                        toast.success("Successfully logged!");
+                        toast.success('Successfully logged! 😎')
                         history.push("/admin/AdminPage")
                     } else {
-                        toast.success("Successfully logged!");
+                        toast.success('Successfully logged! 😎')
                         history.push("/user/UserPage")
                     }
                 }
             }).catch(() => {
-            toast.error("Username or password is wrong!");
+            toast.error("Username or password is wrong! 🤦‍♂")
         });
     }
 
     return (
         <Container>
+            <ToastContainer/>
             <Paper elevation={3} style={paperStyle}>
                 <form className={classes.root} onSubmit={handleSubmit(onSubmit)} noValidate autoComplete="off">
                     <h1 style={{color: "#3F51B5"}}>SIGN IN</h1>

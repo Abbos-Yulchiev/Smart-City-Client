@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export function SignUp(history) {
+export function SignUp({history}) {
     const classes = useStyles();
     const paperStyle = {padding: '40px', width: 400, margin: "30px auto"}
     const [citizenId, setCitizenId] = useState('')
@@ -43,7 +43,7 @@ export function SignUp(history) {
         }
     }
     if (redirect) {
-        return <Redirect to="/SignIn"/>
+        return <Redirect to="/component/SignIn"/>
     }
 
     return (

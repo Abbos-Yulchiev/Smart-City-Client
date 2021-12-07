@@ -3,7 +3,7 @@ import {GlobalContext} from "../App";
 import {getRequest} from "../resources/Request";
 import {urlPath} from "../apiPath/urlPath";
 import {TOKEN} from "../resources/Const";
-import {toast} from 'react-toastify';
+import {toast, ToastContainer} from 'react-toastify';
 
 function AdminPage({history}) {
 
@@ -19,7 +19,6 @@ function AdminPage({history}) {
                 if (res.data && res.status === 200) {
                     value.setLogged(true);
                     value.setUser(res.data.result);
-                    toast.success('Successfully logged!')
                 }
             })/*.catch(() => {
                 localStorage.removeItem(TOKEN);
@@ -44,6 +43,7 @@ function AdminPage({history}) {
             backgroundPosition: 'center',
             backgroundRepeat: 'no-repeat',
         }}>
+            <ToastContainer/>
             <br/><br/>
             <div>
                 <div className="container">
