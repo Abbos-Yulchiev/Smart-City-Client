@@ -103,7 +103,7 @@ function Orders({history}) {
                                             }
                                         </td>
                                         <th>{res.totalPrice}$</th>
-                                        <td>{res.creationDate[0] + " " + res.creationDate[1]}</td>
+                                        <td>{res.creationDate[0] + "-" + res.creationDate[1] + "-" + res.creationDate[2] + " " + res.creationDate[3] + ":" + res.creationDate[4]}</td>
                                         <td>
                                             {
                                                 res.bookingDate === null

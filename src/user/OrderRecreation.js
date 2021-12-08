@@ -105,6 +105,10 @@ function OrderRecreation({history}) {
         postRequest(urlPath.payForOrder, pay).then(res => {
             if (res.status === 200) {
                 setPaymentUrl(res.data.object);
+                toast.success("Order confirmed!")
+            }
+            else if (res.status === 503) {
+                toast.warn("Server not response!")
             }
         })
     }
@@ -119,7 +123,7 @@ function OrderRecreation({history}) {
             }
             postRequest(urlPath.orderRecreation, order).then(res => {
                 if (res.status === 202) {
-                    toast.success(res.data.message);
+                    toast.success("Order successfully made");
                     setOrderId(res.data.object);
                     setOrder(true);
                 }
@@ -130,6 +134,7 @@ function OrderRecreation({history}) {
     function cancelOrder() {
         deleteRequest(urlPath.cancelOrder + orderId).then(res => {
             if (res.status === 202) {
+                toast.success("Order canceled!")
                 setOrder(false);
             }
         })

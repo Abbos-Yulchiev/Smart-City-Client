@@ -312,7 +312,7 @@ function Recreation({history}) {
     }
 
     async function editEventStatus(status) {
-        return await putRequest(urlPath.editEventStatus + placeId, status)
+        return await putRequest(urlPath.editRecreationStatus+ placeId, status)
     }
 
     function editStatus(event, error, values) {

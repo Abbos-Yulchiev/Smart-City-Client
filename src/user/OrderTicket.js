@@ -88,10 +88,11 @@ function OrderTicket({history}) {
             let ticketList = {"ticketsId": tickets}
             postRequest(urlPath.orderTicket, ticketList).then(res => {
                 if (res.status === 202) {
-                    toast.success(res.data.message);
+                    console.log(res.data);
+                    toast.success("Order successfully  confirmed. Now you can pay for order.");
                     setOrder(true);
                     setTickets([]);
-                    setOrderId(res.data.object);
+                    setOrderId(res.data);
                 }
             })
         }
@@ -100,6 +101,7 @@ function OrderTicket({history}) {
     function cancelOrder() {
         deleteRequest(urlPath.cancelOrder + orderId).then(res => {
             if (res.status === 202) {
+                toast.success("Order canceled!")
                 setOrder(false);
             }
         })
@@ -118,8 +120,7 @@ function OrderTicket({history}) {
         })
     }
 
-    //TODO URL shoul be edited
-
+    //TODO URL should be edited
 
     return (
         <div>

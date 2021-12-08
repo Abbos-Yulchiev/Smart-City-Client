@@ -17,6 +17,7 @@ export const urlPath = {
     addEvent: 'event/add',
     editEvent: 'event/edit',
     deleteEvent: 'event/delete/',
+    editEventStatus: 'event/editEventStatus/',
 
     /* Recreation urls */
     getRecreationById: 'recreation/',
@@ -28,7 +29,6 @@ export const urlPath = {
     editRecreation: 'recreation/edit/',
     deleteRecreation: 'recreation/delete/',
     editRecreationStatus: 'recreation/editStatus/',
-    editEventStatus: 'recreation/editStatus/',
 
     /* Commentary urls */
     getCommentary: 'commentary/all?recreationId=', //should add commentary Id

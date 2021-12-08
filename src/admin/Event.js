@@ -1,7 +1,7 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {BASE_URL, TOKEN} from "../resources/Const";
 import {toast, ToastContainer} from "react-toastify";
-import {deleteRequest, getRequest, postRequest} from "../resources/Request";
+import {deleteRequest, getRequest, postRequest, putRequest} from "../resources/Request";
 import {urlPath} from "../apiPath/urlPath";
 import {GlobalContext} from "../App";
 import {Pagination, Select} from "antd";
@@ -18,7 +18,9 @@ function Event({history}) {
     const [modal, setModal] = useState(false);
     const [modalDelete, setModalDelete] = useState(false);
     const [modal2, setModal2] = useState(false);
+    const [statusModal, setStatusModal] = useState(false);
     const [placeId, setPlaceId] = useState('');
+    const [eventId, setEventId] = useState('');
     const [recreation, setRecreation] = useState([]);
     const [recreationId, setRecreationId] = useState([]);
     const [startTime, setStartTime] = useState(new Date());
@@ -171,6 +173,25 @@ function Event({history}) {
         setModal2(!modal2)
     }
 
+    function toggle3(value) {
+        setEventId(value);
+        setStatusModal(false);
+    }
+
+    function deleteToggle(value) {
+        if (value !== null) {
+            setDeleteLink(value)
+            setModalDelete(!modalDelete)
+        } else {
+            setDeleteLink('')
+            setModalDelete(!modalDelete)
+        }
+    }
+
+    function statusToggle() {
+        setStatusModal(!statusModal)
+    }
+
     function addComment(id) {
         if (commentary.length !== 0) {
             let comment = {
@@ -186,17 +207,7 @@ function Event({history}) {
         } else return alert("Comment text is empty!");
     }
 
-    function deleteToggle(value) {
-        if (value !== null) {
-            setDeleteLink(value)
-            setModalDelete(!modalDelete)
-        } else {
-            setDeleteLink('')
-            setModalDelete(!modalDelete)
-        }
-    }
-
-    function deleteRecreation(value) {
+    function deleteEvent(value) {
         deleteRequest(value).then(res => {
             if (res.status === 200) {
                 toast.success(res.data.message)
@@ -211,6 +222,23 @@ function Event({history}) {
 
     function ticketUrl() {
         history.push("/Admin/Event")
+    }
+
+    async function editEventStatus(status) {
+        return await putRequest(urlPath.editEventStatus + eventId, status)
+    }
+
+    function editStatus(event, error, values) {
+
+        editEventStatus(eventStatus).then(res => {
+            if (res.status === 202) {
+                console.log(res);
+                toast.success(res.data.message)
+                statusToggle();
+            }
+        }).catch(error => {
+            toast.error("Error occurred!")
+        })
     }
 
     return (
@@ -240,6 +268,7 @@ function Event({history}) {
                 <th>Start Time</th>
                 <th>End Time</th>
                 <th>Confirmed</th>
+                <th>Edit Status</th>
                 <th>Deleted</th>
                 <th>Ticket</th>
                 <th>Recreation</th>
@@ -267,6 +296,13 @@ function Event({history}) {
                                 <td>{res.startTime[0] + "-" + res.startTime[1] + "-" + res.startTime[2] + " " + res.startTime[3] + ":" + res.startTime[4]}</td>
                                 <td>{res.endTime[0] + "-" + res.endTime[1] + "-" + res.endTime[2] + " " + res.endTime[3] + ":" + res.endTime[4]}</td>
                                 <th>{res.confirmed + ""}</th>
+                                <td>
+                                    <Button onClick={() => {
+                                        toggle3(res.id);
+                                        statusToggle();
+                                    }} style={{backgroundColor: "#1c80b6", fontSize: 14, width: 100}}>Edit
+                                        status</Button>
+                                </td>
                                 <td>
                                     {
                                         res.isDeleted !== null ?
@@ -394,7 +430,42 @@ function Event({history}) {
                 </AvForm>
             </Modal>
 
+            {/*Edit status modal*/}
+            <Modal isOpen={statusModal} toggle={statusToggle}>
+                <ModalHeader toggle={statusToggle}>Edit status</ModalHeader>
+                <AvForm onSubmit={editStatus}>
+                    <ModalBody>
+                        <Select className="col-md-12"
+                                options={statuses} onChange={e => setEventStatus(e)}
+                                defaultValue={"Active"}
+                        />
+                    </ModalBody>
+                    <ModalFooter>
+                        <FormGroup>
+                            <Button color="primary">Submit</Button>{' '}
+                        </FormGroup>
+                        <Button color="secondary" onClick={statusToggle}
+                                type={'button'}>Cancel</Button>
+                    </ModalFooter>
+                </AvForm>
+            </Modal>
+
             {/*Modal For watching photo and comments*/}
+            <Modal isOpen={modalDelete} toggle={deleteToggle}>
+                <ModalHeader>Delete Event</ModalHeader>
+                <ModalBody>
+                    Are you sure for deleting?
+                </ModalBody>
+                <ModalFooter>
+                    <FormGroup>
+                        <Button color="success" onClick={deleteToggle}>No</Button>{' '}
+                    </FormGroup>
+                    <Button color="danger" type={'button'} onClick={() => deleteEvent(deleteLink)}>Yes,
+                        delete</Button>
+                </ModalFooter>
+            </Modal>
+
+            {/*Modal Delete Event*/}
             <Modal isOpen={modal2} toggle={toggle2} style={{content: "inherit"}} transparent={true}>
                 <ModalHeader toggle={toggle2}>Watch Photo and Commentary</ModalHeader>
                 <AvForm>
@@ -439,21 +510,6 @@ function Event({history}) {
                         </AvGroup>
                     </ModalBody>
                 </AvForm>
-            </Modal>
-
-            {/*Modal Delete Event*/}
-            <Modal isOpen={modalDelete} toggle={deleteToggle}>
-                <ModalHeader>Delete Event</ModalHeader>
-                <ModalBody>
-                    Are you sure for deleting?
-                </ModalBody>
-                <ModalFooter>
-                    <FormGroup>
-                        <Button color="success" onClick={deleteToggle}>No</Button>{' '}
-                    </FormGroup>
-                    <Button color="danger" type={'button'} onClick={() => deleteRecreation(deleteLink)}>Yes,
-                        delete</Button>
-                </ModalFooter>
             </Modal>
         </div>
     );

@@ -81,7 +81,7 @@ function MyOrders({history}) {
     function cancelOrder(value) {
         deleteRequest(value).then(res => {
             if (res.status === 202) {
-                toast.success("Order successfully canceled!")
+                toast.success("Order canceled!")
                 setModalCancel(false);
                 cancelToggle(null);
             }
