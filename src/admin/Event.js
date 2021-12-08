@@ -127,6 +127,10 @@ function Event({history}) {
                 toast.success(res.data.message)
                 getEventInfo(1);
             }
+            else if (res.status === 409){
+                toast.success(res.data.message)
+            }
+
         }).catch(error => {
             toast.error("Error occurred!")
         })

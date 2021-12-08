@@ -80,10 +80,10 @@ function MyOrders({history}) {
 
     function cancelOrder(value) {
         deleteRequest(value).then(res => {
-            if (res.status === 200) {
+            if (res.status === 202) {
                 toast.success("Order successfully canceled!")
-                cancelToggle(null);
                 setModalCancel(false);
+                cancelToggle(null);
             }
         }).catch(error => {
             toast.error("Error occurred!")
@@ -91,7 +91,6 @@ function MyOrders({history}) {
             setModalCancel(false)
         })
     }
-
     return (
         <div>
             <ToastContainer/>

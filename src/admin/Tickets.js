@@ -74,7 +74,7 @@ function Tickets({history}) {
         saveTicket(tickets).then(res => {
             if (res.status === 201) {
                 toggle();
-                toast.success("Tickets savedS")
+                toast.success("Tickets saved!")
             }
         }).catch(error => {
             toast.error("Error occurred!")

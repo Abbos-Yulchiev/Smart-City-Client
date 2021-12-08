@@ -122,6 +122,9 @@ function UserList({history}) {
                 getUsers();
                 activateToggle(null);
             }
+            if (res.status === 409){
+                toast.info(res.data.message)
+            }
         }).catch(error => {
             toast.error("User not found or Already deleted")
             activateToggle(null);
